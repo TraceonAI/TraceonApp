@@ -179,7 +179,7 @@ export default function AnalysisDisplay({ analysis, isLoading = false }: Analysi
       {analysis.logEntries && analysis.logEntries.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Recent Log Entries</h3>
-          <div className="bg-gray-900 text-green-400 rounded-lg p-4 max-h-60 overflow-y-auto font-mono text-sm">
+          <div className="bg-gray-900 text-green-400 rounded-lg p-4 max-h-60 overflow-y-auto font-mono text-sm scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
             {analysis.logEntries.slice(0, 10).map((entry, index) => (
               <div key={index} className="mb-1">
                 <span className="text-gray-500">[{entry.timestamp}]</span>{' '}

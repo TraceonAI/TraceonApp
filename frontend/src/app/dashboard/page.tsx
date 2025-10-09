@@ -70,27 +70,29 @@ export default function Dashboard() {
   return (
     <ProtectedRoute>
       <SidebarLayout>
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 min-h-0 flex flex-col">
           {/* Header */}
-          <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+          <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex-shrink-0">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Real-time analysis and system overview</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Monitor your system health and recent analyses</p>
               </div>
-              <div className="flex items-center space-x-2 text-green-600 dark:text-green-400">
-                <Activity className="w-5 h-5" />
-                <span className="text-sm font-medium">All Systems Operational</span>
+              <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1">
+                  <Activity className="w-4 h-4 text-green-500" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">System Operational</span>
+                </div>
               </div>
             </div>
           </header>
 
-          {/* Main Content */}
-          <main className="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900">
+          <div className="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {stats.map((stat) => (
-                <div key={stat.name} className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6">
+                <div key={stat.name} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-6">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
                       <stat.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
@@ -138,7 +140,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-          </main>
+          </div>
         </div>
       </SidebarLayout>
     </ProtectedRoute>

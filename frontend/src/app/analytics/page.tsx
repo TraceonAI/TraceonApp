@@ -101,19 +101,19 @@ export default function Analytics() {
   return (
     <ProtectedRoute>
       <SidebarLayout>
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 min-h-0 flex flex-col">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b px-6 py-4">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Analytics & Insights</h1>
-            <p className="text-sm text-gray-600">Analysis trends, performance metrics, and system insights</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Analytics & Insights</h1>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Analysis trends, performance metrics, and system insights</p>
           </div>
           <div className="flex items-center space-x-3">
             <select
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               {dateRangeOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -121,10 +121,10 @@ export default function Analytics() {
                 </option>
               ))}
             </select>
-            <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+            <button className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
               <Filter className="w-5 h-5" />
             </button>
-            <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+            <button className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
               <RefreshCw className="w-5 h-5" />
             </button>
             <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
@@ -135,20 +135,20 @@ export default function Analytics() {
         </div>
       </header>
 
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">{/* Added overflow-y-auto and dark mode */}
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat) => (
-              <div key={stat.name} className="bg-white rounded-lg shadow p-6">
+              <div key={stat.name} className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <stat.icon className="h-6 w-6 text-blue-600" />
                   </div>
                   <div className="ml-4 flex-1">
-                    <p className="text-sm font-medium text-gray-600">{stat.name}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{stat.name}</p>
                     <div className="flex items-baseline">
-                      <p className="text-2xl font-semibold text-gray-900">{stat.value}</p>
+                      <p className="text-2xl font-semibold text-gray-900 dark:text-white">{stat.value}</p>
                       <span className={`ml-2 text-sm font-medium ${
                         stat.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
                       }`}>
@@ -164,10 +164,10 @@ export default function Analytics() {
           {/* Charts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Time Series Chart */}
-            <div className="bg-white rounded-lg shadow">
-              <div className="p-6 border-b">
-                <h3 className="text-lg font-semibold text-gray-900">Analysis Trends</h3>
-                <p className="text-sm text-gray-600">Daily analysis volume and error rates</p>
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Analysis Trends</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Daily analysis volume and error rates</p>
               </div>
               <div className="p-6">
                 <div className="h-64 flex items-end justify-between space-x-2">
@@ -198,31 +198,31 @@ export default function Analytics() {
                 <div className="flex items-center justify-center space-x-6 mt-4">
                   <div className="flex items-center space-x-2">
                     <div className="w-3 h-3 bg-blue-500 rounded"></div>
-                    <span className="text-sm text-gray-600">Analyses</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Analyses</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="w-3 h-3 bg-red-500 rounded"></div>
-                    <span className="text-sm text-gray-600">Errors</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Errors</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Severity Breakdown */}
-            <div className="bg-white rounded-lg shadow">
-              <div className="p-6 border-b">
-                <h3 className="text-lg font-semibold text-gray-900">Issue Severity Distribution</h3>
-                <p className="text-sm text-gray-600">Breakdown of issues by severity level</p>
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Issue Severity Distribution</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Breakdown of issues by severity level</p>
               </div>
               <div className="p-6">
                 <div className="space-y-4">
                   {analyticsData.severityBreakdown.map((item, index) => (
                     <div key={index} className="flex items-center">
-                      <div className="w-24 text-sm font-medium text-gray-700">
+                      <div className="w-24 text-sm font-medium text-gray-700 dark:text-gray-300">
                         {item.severity}
                       </div>
                       <div className="flex-1 mx-4">
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                           <div 
                             className={`h-2 rounded-full ${
                               item.severity === 'Critical' ? 'bg-red-500' :
@@ -234,10 +234,10 @@ export default function Analytics() {
                           />
                         </div>
                       </div>
-                      <div className="w-16 text-sm text-gray-600 text-right">
+                      <div className="w-16 text-sm text-gray-600 dark:text-gray-400 text-right">
                         {item.count}
                       </div>
-                      <div className="w-12 text-sm text-gray-500 text-right">
+                      <div className="w-12 text-sm text-gray-500 dark:text-gray-500 text-right">
                         {item.percentage}%
                       </div>
                     </div>

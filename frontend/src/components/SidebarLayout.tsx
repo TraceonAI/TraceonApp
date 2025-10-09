@@ -80,7 +80,6 @@ export default function SidebarLayout({ children }: SidebarProps) {
 
   const handleLogout = () => {
     logout();
-    router.push('/landing');
   };
 
   return (

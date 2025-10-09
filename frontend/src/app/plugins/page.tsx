@@ -170,16 +170,16 @@ export default function Plugins() {
   return (
     <ProtectedRoute>
       <SidebarLayout>
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 min-h-0 flex flex-col">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b px-6 py-4">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Plugins & Integrations</h1>
-            <p className="text-sm text-gray-600">Connect external tools to enhance Traceon AI's capabilities</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Plugins & Integrations</h1>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Connect external tools to enhance Traceon AI's capabilities</p>
           </div>
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-gray-500 dark:text-gray-400">
               {plugins.filter(p => p.status === 'connected').length} of {plugins.length} connected
             </span>
             <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
@@ -190,7 +190,7 @@ export default function Plugins() {
         </div>
       </header>
 
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto">
           {/* Category Filter */}
           <div className="mb-6">

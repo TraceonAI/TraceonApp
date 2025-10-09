@@ -42,6 +42,46 @@ interface UISettings {
   showTutorials: boolean;
 }
 
+interface SecuritySettings {
+  enableTwoFactor: boolean;
+  sessionTimeout: number;
+  passwordExpiry: number;
+  enableAuditLog: boolean;
+  restrictIpAccess: boolean;
+  allowedIpRanges: string;
+  enableEncryption: boolean;
+  encryptionLevel: 'standard' | 'high' | 'maximum';
+}
+
+interface DatabaseSettings {
+  connectionPool: number;
+  queryTimeout: number;
+  enableBackups: boolean;
+  backupInterval: number;
+  compressionEnabled: boolean;
+  indexOptimization: boolean;
+  enableCaching: boolean;
+  cacheSize: number;
+  maintenanceWindow: string;
+}
+
+interface NotificationSettings {
+  enableEmailNotifications: boolean;
+  enableSmsNotifications: boolean;
+  enableSlackIntegration: boolean;
+  enableWebhooks: boolean;
+  emailAddress: string;
+  phoneNumber: string;
+  slackWebhook: string;
+  notifyOnCritical: boolean;
+  notifyOnHigh: boolean;
+  notifyOnMedium: boolean;
+  notifyOnLow: boolean;
+  quietHours: boolean;
+  quietStart: string;
+  quietEnd: string;
+}
+
 export default function Settings() {
   const [activeSection, setActiveSection] = useState('system');
   const [hasChanges, setHasChanges] = useState(false);
@@ -71,6 +111,46 @@ export default function Settings() {
     showTutorials: true
   });
 
+  const [securitySettings, setSecuritySettings] = useState<SecuritySettings>({
+    enableTwoFactor: false,
+    sessionTimeout: 30,
+    passwordExpiry: 90,
+    enableAuditLog: true,
+    restrictIpAccess: false,
+    allowedIpRanges: '',
+    enableEncryption: true,
+    encryptionLevel: 'high'
+  });
+
+  const [databaseSettings, setDatabaseSettings] = useState<DatabaseSettings>({
+    connectionPool: 20,
+    queryTimeout: 30,
+    enableBackups: true,
+    backupInterval: 24,
+    compressionEnabled: true,
+    indexOptimization: true,
+    enableCaching: true,
+    cacheSize: 512,
+    maintenanceWindow: '02:00'
+  });
+
+  const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>({
+    enableEmailNotifications: true,
+    enableSmsNotifications: false,
+    enableSlackIntegration: false,
+    enableWebhooks: false,
+    emailAddress: '',
+    phoneNumber: '',
+    slackWebhook: '',
+    notifyOnCritical: true,
+    notifyOnHigh: true,
+    notifyOnMedium: false,
+    notifyOnLow: false,
+    quietHours: false,
+    quietStart: '22:00',
+    quietEnd: '08:00'
+  });
+
   const sections = [
     { id: 'system', name: 'System', icon: Monitor, description: 'Core system configuration' },
     { id: 'integrations', name: 'Integrations', icon: Zap, description: 'External service settings' },
@@ -98,15 +178,66 @@ export default function Settings() {
       enableCaching: true,
       logLevel: 'info'
     });
-    setHasChanges(true);
+    setIntegrationSettings({
+      maxRetries: 3,
+      timeoutSeconds: 30,
+      batchSize: 100,
+      enableWebhooks: true,
+      enableSSL: true
+    });
+    setUISettings({
+      autoRefresh: true,
+      refreshInterval: 30,
+      showAdvancedMetrics: false,
+      compactMode: false,
+      showTutorials: true
+    });
+    setSecuritySettings({
+      enableTwoFactor: false,
+      sessionTimeout: 30,
+      passwordExpiry: 90,
+      enableAuditLog: true,
+      restrictIpAccess: false,
+      allowedIpRanges: '',
+      enableEncryption: true,
+      encryptionLevel: 'high'
+    });
+    setDatabaseSettings({
+      connectionPool: 20,
+      queryTimeout: 30,
+      enableBackups: true,
+      backupInterval: 24,
+      compressionEnabled: true,
+      indexOptimization: true,
+      enableCaching: true,
+      cacheSize: 512,
+      maintenanceWindow: '02:00'
+    });
+    setNotificationSettings({
+      enableEmailNotifications: true,
+      enableSmsNotifications: false,
+      enableSlackIntegration: false,
+      enableWebhooks: false,
+      emailAddress: '',
+      phoneNumber: '',
+      slackWebhook: '',
+      notifyOnCritical: true,
+      notifyOnHigh: true,
+      notifyOnMedium: false,
+      notifyOnLow: false,
+      quietHours: false,
+      quietStart: '22:00',
+      quietEnd: '08:00'
+    });
+    setHasChanges(false);
   };
 
   return (
     <ProtectedRoute>
       <SidebarLayout>
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b px-6 py-4">
+      <header className="bg-white shadow-sm border-b px-6 py-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">System Settings</h1>
@@ -139,7 +270,7 @@ export default function Settings() {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <div className="w-64 bg-white border-r overflow-y-auto">
+        <div className="w-64 bg-white border-r overflow-y-auto scrollbar-thin">
           <nav className="p-4 space-y-2">
             {sections.map((section) => (
               <button
@@ -164,8 +295,9 @@ export default function Settings() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto p-6">
-          <div className="max-w-4xl">
+        <div className="flex-1 overflow-y-auto bg-gray-50 scrollbar-thin">
+          <div className="p-6">
+            <div className="max-w-4xl mx-auto">
             {/* System Settings */}
             {activeSection === 'system' && (
               <div className="space-y-6">
@@ -476,8 +608,610 @@ export default function Settings() {
               </div>
             )}
 
+            {/* Security Settings */}
+            {activeSection === 'security' && (
+              <div className="bg-white rounded-lg border">
+                <div className="p-6">
+                  <div className="mb-8">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-2">Security Settings</h2>
+                    <p className="text-gray-600">Configure security policies and access controls</p>
+                  </div>
+
+                  <div className="space-y-8">
+                    <div className="border-b pb-6">
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Authentication</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Two-Factor Authentication</label>
+                            <p className="text-sm text-gray-500">Add an extra layer of security to user accounts</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={securitySettings.enableTwoFactor}
+                            onChange={(e) => {
+                              setSecuritySettings({ ...securitySettings, enableTwoFactor: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Session Timeout (minutes)
+                          </label>
+                          <input
+                            type="number"
+                            value={securitySettings.sessionTimeout}
+                            onChange={(e) => {
+                              setSecuritySettings({ ...securitySettings, sessionTimeout: Number(e.target.value) });
+                              setHasChanges(true);
+                            }}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">Automatic logout after inactivity</p>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Password Expiry (days)
+                          </label>
+                          <input
+                            type="number"
+                            value={securitySettings.passwordExpiry}
+                            onChange={(e) => {
+                              setSecuritySettings({ ...securitySettings, passwordExpiry: Number(e.target.value) });
+                              setHasChanges(true);
+                            }}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">Force password change interval</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="border-b pb-6">
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Access Control</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Enable Audit Logging</label>
+                            <p className="text-sm text-gray-500">Track all user actions and system changes</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={securitySettings.enableAuditLog}
+                            onChange={(e) => {
+                              setSecuritySettings({ ...securitySettings, enableAuditLog: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Restrict IP Access</label>
+                            <p className="text-sm text-gray-500">Only allow access from specific IP ranges</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={securitySettings.restrictIpAccess}
+                            onChange={(e) => {
+                              setSecuritySettings({ ...securitySettings, restrictIpAccess: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        {securitySettings.restrictIpAccess && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Allowed IP Ranges
+                            </label>
+                            <textarea
+                              value={securitySettings.allowedIpRanges}
+                              onChange={(e) => {
+                                setSecuritySettings({ ...securitySettings, allowedIpRanges: e.target.value });
+                                setHasChanges(true);
+                              }}
+                              placeholder="192.168.1.0/24&#10;10.0.0.0/8"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              rows={3}
+                            />
+                            <p className="text-xs text-gray-500 mt-1">One IP range per line (CIDR notation)</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Data Protection</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Enable Data Encryption</label>
+                            <p className="text-sm text-gray-500">Encrypt sensitive data at rest and in transit</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={securitySettings.enableEncryption}
+                            onChange={(e) => {
+                              setSecuritySettings({ ...securitySettings, enableEncryption: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        {securitySettings.enableEncryption && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Encryption Level
+                            </label>
+                            <select
+                              value={securitySettings.encryptionLevel}
+                              onChange={(e) => {
+                                setSecuritySettings({ ...securitySettings, encryptionLevel: e.target.value as any });
+                                setHasChanges(true);
+                              }}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="standard">Standard (AES-128)</option>
+                              <option value="high">High (AES-256)</option>
+                              <option value="maximum">Maximum (AES-256 + RSA)</option>
+                            </select>
+                            <p className="text-xs text-gray-500 mt-1">Higher levels provide better security but may impact performance</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Database Settings */}
+            {activeSection === 'database' && (
+              <div className="bg-white rounded-lg border">
+                <div className="p-6">
+                  <div className="mb-8">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-2">Database Settings</h2>
+                    <p className="text-gray-600">Configure database performance and maintenance</p>
+                  </div>
+
+                  <div className="space-y-8">
+                    <div className="border-b pb-6">
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Connection Settings</h3>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Connection Pool Size
+                          </label>
+                          <input
+                            type="number"
+                            value={databaseSettings.connectionPool}
+                            onChange={(e) => {
+                              setDatabaseSettings({ ...databaseSettings, connectionPool: Number(e.target.value) });
+                              setHasChanges(true);
+                            }}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">Maximum number of concurrent database connections</p>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Query Timeout (seconds)
+                          </label>
+                          <input
+                            type="number"
+                            value={databaseSettings.queryTimeout}
+                            onChange={(e) => {
+                              setDatabaseSettings({ ...databaseSettings, queryTimeout: Number(e.target.value) });
+                              setHasChanges(true);
+                            }}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">Maximum time to wait for query execution</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="border-b pb-6">
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Backup & Recovery</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Enable Automatic Backups</label>
+                            <p className="text-sm text-gray-500">Regularly backup database to prevent data loss</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={databaseSettings.enableBackups}
+                            onChange={(e) => {
+                              setDatabaseSettings({ ...databaseSettings, enableBackups: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        {databaseSettings.enableBackups && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Backup Interval (hours)
+                            </label>
+                            <input
+                              type="number"
+                              value={databaseSettings.backupInterval}
+                              onChange={(e) => {
+                                setDatabaseSettings({ ...databaseSettings, backupInterval: Number(e.target.value) });
+                                setHasChanges(true);
+                              }}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">How often to create database backups</p>
+                          </div>
+                        )}
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Maintenance Window
+                          </label>
+                          <input
+                            type="time"
+                            value={databaseSettings.maintenanceWindow}
+                            onChange={(e) => {
+                              setDatabaseSettings({ ...databaseSettings, maintenanceWindow: e.target.value });
+                              setHasChanges(true);
+                            }}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">Preferred time for maintenance operations</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Performance Optimization</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Enable Compression</label>
+                            <p className="text-sm text-gray-500">Compress data to save storage space</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={databaseSettings.compressionEnabled}
+                            onChange={(e) => {
+                              setDatabaseSettings({ ...databaseSettings, compressionEnabled: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Index Optimization</label>
+                            <p className="text-sm text-gray-500">Automatically optimize database indexes</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={databaseSettings.indexOptimization}
+                            onChange={(e) => {
+                              setDatabaseSettings({ ...databaseSettings, indexOptimization: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Enable Query Caching</label>
+                            <p className="text-sm text-gray-500">Cache frequently used queries for better performance</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={databaseSettings.enableCaching}
+                            onChange={(e) => {
+                              setDatabaseSettings({ ...databaseSettings, enableCaching: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        {databaseSettings.enableCaching && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Cache Size (MB)
+                            </label>
+                            <input
+                              type="number"
+                              value={databaseSettings.cacheSize}
+                              onChange={(e) => {
+                                setDatabaseSettings({ ...databaseSettings, cacheSize: Number(e.target.value) });
+                                setHasChanges(true);
+                              }}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">Memory allocated for query caching</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Notifications Settings */}
+            {activeSection === 'notifications' && (
+              <div className="bg-white rounded-lg border">
+                <div className="p-6">
+                  <div className="mb-8">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-2">Notification Settings</h2>
+                    <p className="text-gray-600">Configure how and when you receive system notifications</p>
+                  </div>
+
+                  <div className="space-y-8">
+                    <div className="border-b pb-6">
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Notification Channels</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Email Notifications</label>
+                            <p className="text-sm text-gray-500">Receive alerts via email</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={notificationSettings.enableEmailNotifications}
+                            onChange={(e) => {
+                              setNotificationSettings({ ...notificationSettings, enableEmailNotifications: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        {notificationSettings.enableEmailNotifications && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Email Address
+                            </label>
+                            <input
+                              type="email"
+                              value={notificationSettings.emailAddress}
+                              onChange={(e) => {
+                                setNotificationSettings({ ...notificationSettings, emailAddress: e.target.value });
+                                setHasChanges(true);
+                              }}
+                              placeholder="your.email@company.com"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">SMS Notifications</label>
+                            <p className="text-sm text-gray-500">Receive critical alerts via SMS</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={notificationSettings.enableSmsNotifications}
+                            onChange={(e) => {
+                              setNotificationSettings({ ...notificationSettings, enableSmsNotifications: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        {notificationSettings.enableSmsNotifications && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Phone Number
+                            </label>
+                            <input
+                              type="tel"
+                              value={notificationSettings.phoneNumber}
+                              onChange={(e) => {
+                                setNotificationSettings({ ...notificationSettings, phoneNumber: e.target.value });
+                                setHasChanges(true);
+                              }}
+                              placeholder="+1 (555) 123-4567"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Slack Integration</label>
+                            <p className="text-sm text-gray-500">Send notifications to Slack channel</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={notificationSettings.enableSlackIntegration}
+                            onChange={(e) => {
+                              setNotificationSettings({ ...notificationSettings, enableSlackIntegration: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        {notificationSettings.enableSlackIntegration && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Slack Webhook URL
+                            </label>
+                            <input
+                              type="url"
+                              value={notificationSettings.slackWebhook}
+                              onChange={(e) => {
+                                setNotificationSettings({ ...notificationSettings, slackWebhook: e.target.value });
+                                setHasChanges(true);
+                              }}
+                              placeholder="https://hooks.slack.com/services/..."
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Webhook Notifications</label>
+                            <p className="text-sm text-gray-500">Send alerts to external webhook endpoints</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={notificationSettings.enableWebhooks}
+                            onChange={(e) => {
+                              setNotificationSettings({ ...notificationSettings, enableWebhooks: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="border-b pb-6">
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Alert Severity Levels</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Critical Alerts</label>
+                            <p className="text-sm text-gray-500">System failures and security breaches</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={notificationSettings.notifyOnCritical}
+                            onChange={(e) => {
+                              setNotificationSettings({ ...notificationSettings, notifyOnCritical: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">High Priority Alerts</label>
+                            <p className="text-sm text-gray-500">Performance degradation and errors</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={notificationSettings.notifyOnHigh}
+                            onChange={(e) => {
+                              setNotificationSettings({ ...notificationSettings, notifyOnHigh: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Medium Priority Alerts</label>
+                            <p className="text-sm text-gray-500">Warnings and configuration changes</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={notificationSettings.notifyOnMedium}
+                            onChange={(e) => {
+                              setNotificationSettings({ ...notificationSettings, notifyOnMedium: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-yellow-600 focus:ring-yellow-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Low Priority Alerts</label>
+                            <p className="text-sm text-gray-500">Informational messages and status updates</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={notificationSettings.notifyOnLow}
+                            onChange={(e) => {
+                              setNotificationSettings({ ...notificationSettings, notifyOnLow: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">Quiet Hours</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Enable Quiet Hours</label>
+                            <p className="text-sm text-gray-500">Suppress non-critical notifications during specified times</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={notificationSettings.quietHours}
+                            onChange={(e) => {
+                              setNotificationSettings({ ...notificationSettings, quietHours: e.target.checked });
+                              setHasChanges(true);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+
+                        {notificationSettings.quietHours && (
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Start Time
+                              </label>
+                              <input
+                                type="time"
+                                value={notificationSettings.quietStart}
+                                onChange={(e) => {
+                                  setNotificationSettings({ ...notificationSettings, quietStart: e.target.value });
+                                  setHasChanges(true);
+                                }}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                End Time
+                              </label>
+                              <input
+                                type="time"
+                                value={notificationSettings.quietEnd}
+                                onChange={(e) => {
+                                  setNotificationSettings({ ...notificationSettings, quietEnd: e.target.value });
+                                  setHasChanges(true);
+                                }}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Other sections placeholder */}
-            {!['system', 'integrations', 'ui'].includes(activeSection) && (
+            {!['system', 'integrations', 'ui', 'security', 'database', 'notifications'].includes(activeSection) && (
               <div className="bg-white rounded-lg border p-6">
                 <div className="text-center py-12">
                   <Info className="w-12 h-12 text-gray-400 mx-auto mb-4" />
@@ -490,11 +1224,12 @@ export default function Settings() {
                 </div>
               </div>
             )}
+            </div>
           </div>
         </div>
       </div>
     </div>
-      </SidebarLayout>
-    </ProtectedRoute>
+    </SidebarLayout>
+  </ProtectedRoute>
   );
 }
