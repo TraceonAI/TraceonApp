@@ -272,7 +272,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative py-48 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="w-full px-6 lg:px-12 xl:px-16 text-center relative z-10">
           <div className="space-y-16">
             {/* Hero Content */}
@@ -291,7 +291,7 @@ export default function LandingPage() {
                 <span className="neon-text">team</span>
               </h1>
               
-              <p className="text-xl max-w-4xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-xl max-w-4xl mx-auto leading-relaxed" style={{margin:'auto', color: 'var(--text-secondary)' }}>
                 TraceonAI works seamlessly with the technologies you already use. 
                 Predictive AI that prevents outages before they happen, with autonomous 
                 remediation that maintains 99.99% uptime.
@@ -327,13 +327,13 @@ export default function LandingPage() {
       </section>
 
       {/* Feature Showcase - Graphite Style */}
-      <section className="py-56 relative">
+      <section className="min-h-screen flex items-center justify-center relative py-20">
         <div className="w-full px-6 lg:px-12 xl:px-16">
           <div className="text-center mb-28">
             <h2 className="text-4xl lg:text-5xl font-bold mb-8">
               <span style={{ color: 'var(--text-primary)' }}>Where change happens</span>
             </h2>
-            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            <p  className="text-xl max-w-3xl mx-auto leading-relaxed" style={{margin:'auto', color: 'var(--text-secondary)' }}>
               Organizations that adopt TraceonAI ship more code with smaller incidents 
               and faster recovery cycles.
             </p>
@@ -343,7 +343,7 @@ export default function LandingPage() {
           <div className="relative max-w-6xl mx-auto">
             <div className="space-y-12">
               {/* AI Intelligence Card */}
-              <div className="glass-effect neon-border p-10 rounded-2xl transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
+              <div style={{margin:'auto'}} className="glass-effect neon-border p-10 rounded-2xl transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
                 <div className="grid lg:grid-cols-2 gap-10 items-center">
                   <div>
                     <div className="flex items-center gap-4 mb-6">
@@ -417,41 +417,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Final CTA - Graphite Style */}
-      <section className="py-56 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-blue-900/20"></div>
-          <div className="neon-glow absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-full opacity-20"></div>
-        </div>
-        
-        <div className="w-full px-6 lg:px-12 xl:px-16 text-center relative z-10">
-          <div className="max-w-5xl mx-auto space-y-20">
-            <div className="space-y-8">
-              <h2 className="text-5xl lg:text-6xl font-bold mb-10 leading-tight">
-                <span style={{ color: 'var(--text-primary)' }}>Built for the world's fastest</span>
-                <br />
-                <span className="neon-text">engineering teams</span>
-                <br />
-                <span style={{ color: 'var(--text-primary)' }}>now available for everyone</span>
-              </h2>
-              <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                Join 500+ engineering teams already using TraceonAI to maintain 99.99% uptime 
-                and reduce incident response time by 85%.
-              </p>
-            </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
-              <Link href="/dashboard" className="btn-secondary text-lg px-10 py-5">
-                Request a demo
-              </Link>
-              <Link href="/signup" className="btn-primary text-lg px-10 py-5">
-                Start free trial
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* AI Assistant Section */}
       <section className="py-40" style={{ backgroundColor: 'var(--background-primary)' }}>
@@ -524,7 +490,7 @@ export default function LandingPage() {
         <div className="w-full px-4 lg:px-8 xl:px-12">
           <div className="text-center mb-12">
             <h2 className="text-section mb-4 text-reveal">Intelligent SRE Platform</h2>
-            <p className="text-body max-w-4xl mx-auto scroll-fade-in">
+            <p style={{margin:'auto'}} className="text-body max-w-4xl mx-auto scroll-fade-in">
               Experience our AI-powered capabilities through interactive demonstrations
             </p>
           </div>
@@ -698,11 +664,11 @@ export default function LandingPage() {
       </section>
 
       {/* Feature Grid */}
-      <section className="py-40 scroll-fade-in" style={{ backgroundColor: 'var(--background-primary)' }}>
+      <section className="min-h-screen flex items-center justify-center scroll-fade-in py-20" style={{ backgroundColor: 'var(--background-primary)' }}>
         <div className="w-full px-4 lg:px-8 xl:px-12">
           <div className="text-center mb-16">
             <h2 className="text-section mb-4 text-reveal">Complete SRE Platform</h2>
-            <p className="text-body max-w-4xl mx-auto scroll-fade-in">
+            <p className="text-body max-w-4xl mx-auto scroll-fade-in" style={{margin:'auto'}}>
               Everything you need to build, deploy, and maintain reliable systems at scale.
             </p>
           </div>
@@ -731,11 +697,11 @@ export default function LandingPage() {
       </section>
 
       {/* Developer Infrastructure Section */}
-      <section className="py-40 scroll-fade-in" style={{ backgroundColor: 'var(--background-secondary)' }}>
+      <section className="min-h-screen flex items-center justify-center scroll-fade-in py-20" style={{ backgroundColor: 'var(--background-secondary)' }}>
         <div className="w-full px-4 lg:px-8 xl:px-12">
           <div className="text-center mb-16">
             <h2 className="text-section mb-4 text-reveal">Seamless Integrations</h2>
-            <p className="text-body max-w-4xl mx-auto scroll-fade-in mb-8">
+            <p style={{margin:'auto'}} className="text-body max-w-4xl mx-auto scroll-fade-in mb-8">
               Connect with your existing tools and workflows. TraceonAI integrates with 
               100+ platforms to provide unified visibility across your entire stack.
             </p>
@@ -785,51 +751,16 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Final CTA Section */}
-      <section className="py-40 relative overflow-hidden" style={{ backgroundColor: 'var(--background-primary)' }}>
-        {/* Decorative Hexagon Outlines */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="pattern-hexagon"></div>
-        </div>
-        
-        <div className="w-full px-4 lg:px-8 xl:px-12 text-center relative z-10 background-glow">
-          <div className="space-y-8">
-            <div className="space-y-6">
-              <h2 className="text-hero">
-                Ready to Eliminate Downtime?
-              </h2>
-              <p className="text-xl max-w-4xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-                Join 500+ engineering teams already using TraceonAI to maintain 99.99% uptime 
-                and reduce incident response time by 85%.
-              </p>
-            </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/dashboard" className="btn-primary flex items-center gap-2">
-                <Rocket className="w-5 h-5" />
-                Start Free Trial
-              </Link>
-              <button className="gradient-secondary text-white px-8 py-3 rounded-2xl font-semibold flex items-center gap-2 transition-transform duration-300 hover:scale-105">
-                <MessageCircle className="w-5 h-5" />
-                Talk to Sales
-              </button>
-            </div>
-
-            <div className="pt-8 text-sm" style={{ color: 'var(--text-tertiary)' }}>
-              No credit card required • 14-day free trial • Setup in under 5 minutes
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Features Section */}
-      <section id="features" className="py-48 relative" style={{ backgroundColor: 'var(--background-secondary)' }}>
+      <section id="features" className="min-h-screen flex items-center justify-center relative py-20" style={{ backgroundColor: 'var(--background-secondary)' }}>
         <div className="w-full px-6 lg:px-12 xl:px-16">
           <div className="text-center mb-20">
             <h2 className="text-5xl lg:text-6xl font-bold mb-8">
               <span className="neon-text">Powerful Features</span>
             </h2>
-            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{margin:'auto', color: 'var(--text-secondary)' }}>
               Everything you need to build, deploy, and maintain reliable systems at scale with AI-powered automation.
             </p>
           </div>
@@ -851,32 +782,32 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-48 relative" style={{ backgroundColor: 'var(--background-primary)' }}>
+      <section id="pricing" className="min-h-screen flex items-center justify-center relative py-20" style={{ backgroundColor: 'var(--background-primary)' }}>
         <div className="w-full px-6 lg:px-12 xl:px-16">
           <div className="text-center mb-20">
             <h2 className="text-5xl lg:text-6xl font-bold mb-8">
               <span className="neon-text">Simple, Transparent Pricing</span>
             </h2>
-            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ margin: 'auto', color: 'var(--text-secondary)' }}>
               Choose the plan that fits your team's needs. All plans include 14-day free trial.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto" style={{margin:'auto'}}>
             {/* Starter Plan */}
             <SpotlightCard 
-              className="hover:-translate-y-2 transition-all duration-300"
+              className="hover:-translate-y-2 transition-all duration-300 text-center"
               spotlightColor="rgba(16, 185, 129, 0.12)"
             >
-              <div className="mb-6">
-                <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Starter</h3>
-                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Perfect for small teams</p>
+              <div className="mb-6 max-w-xs mx-auto">
+                <h3 className="text-2xl font-bold mb-2 text-center" style={{ color: 'var(--text-primary)' }}>Starter</h3>
+                <p className="text-sm text-center" style={{ color: 'var(--text-secondary)' }}>Perfect for small teams</p>
               </div>
-              <div className="mb-8">
+              <div className="mb-8 mx-auto">
                 <span className="text-5xl font-bold neon-text">$49</span>
                 <span className="text-lg" style={{ color: 'var(--text-secondary)' }}>/month</span>
               </div>
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-4 mb-8 max-w-xs mx-auto">
                 {[
                   'Up to 5 services monitored',
                   'Real-time alerting',
@@ -885,7 +816,7 @@ export default function LandingPage() {
                   'Email support',
                   'API access'
                 ].map((feature, index) => (
-                  <li key={index} className="flex items-center gap-3">
+                  <li key={index} className="flex items-center gap-3 justify-center">
                     <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--neon-green)' }} />
                     <span style={{ color: 'var(--text-primary)' }}>{feature}</span>
                   </li>
@@ -898,22 +829,22 @@ export default function LandingPage() {
 
             {/* Pro Plan - Featured */}
             <SpotlightCard 
-              className="border-2 relative hover:-translate-y-2 transition-all duration-300"
+              className="border-2 relative hover:-translate-y-2 transition-all duration-300 text-center"
               spotlightColor="rgba(139, 92, 246, 0.2)"
               style={{ borderColor: 'var(--neon-purple)' }}
             >
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full text-sm font-semibold" style={{ backgroundColor: 'var(--neon-purple)', color: 'var(--bg-primary)' }}>
                 Most Popular
               </div>
-              <div className="mb-6 mt-4">
-                <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Professional</h3>
-                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>For growing teams</p>
+              <div className="mb-6 mt-4 max-w-xs mx-auto">
+                <h3 className="text-2xl font-bold mb-2 text-center" style={{ color: 'var(--text-primary)' }}>Professional</h3>
+                <p className="text-sm text-center" style={{ color: 'var(--text-secondary)' }}>For growing teams</p>
               </div>
-              <div className="mb-8">
+              <div className="mb-8 mx-auto">
                 <span className="text-5xl font-bold neon-text">$149</span>
                 <span className="text-lg" style={{ color: 'var(--text-secondary)' }}>/month</span>
               </div>
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-4 mb-8 max-w-xs mx-auto">
                 {[
                   'Up to 20 services monitored',
                   'Advanced AI predictions',
@@ -924,7 +855,7 @@ export default function LandingPage() {
                   'SLO management',
                   'Team collaboration'
                 ].map((feature, index) => (
-                  <li key={index} className="flex items-center gap-3">
+                  <li key={index} className="flex items-center gap-3 justify-center">
                     <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--neon-green)' }} />
                     <span style={{ color: 'var(--text-primary)' }}>{feature}</span>
                   </li>
@@ -937,17 +868,17 @@ export default function LandingPage() {
 
             {/* Enterprise Plan */}
             <SpotlightCard 
-              className="hover:-translate-y-2 transition-all duration-300"
+              className="hover:-translate-y-2 transition-all duration-300 text-center"
               spotlightColor="rgba(0, 212, 255, 0.12)"
             >
-              <div className="mb-6">
-                <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Enterprise</h3>
-                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>For large organizations</p>
+              <div className="mb-6 max-w-xs mx-auto">
+                <h3 className="text-2xl font-bold mb-2 text-center" style={{ color: 'var(--text-primary)' }}>Enterprise</h3>
+                <p className="text-sm text-center" style={{ color: 'var(--text-secondary)' }}>For large organizations</p>
               </div>
-              <div className="mb-8">
+              <div className="mb-8 mx-auto">
                 <span className="text-5xl font-bold neon-text">Custom</span>
               </div>
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-4 mb-8 max-w-xs mx-auto">
                 {[
                   'Unlimited services',
                   'Full AI automation',
@@ -958,7 +889,7 @@ export default function LandingPage() {
                   'On-premise deployment',
                   'Security compliance'
                 ].map((feature, index) => (
-                  <li key={index} className="flex items-center gap-3">
+                  <li key={index} className="flex items-center gap-3 justify-center">
                     <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--neon-green)' }} />
                     <span style={{ color: 'var(--text-primary)' }}>{feature}</span>
                   </li>
@@ -973,7 +904,7 @@ export default function LandingPage() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-48 relative" style={{ backgroundColor: 'var(--background-secondary)' }}>
+      <section id="about" className="min-h-screen flex items-center justify-center relative py-20" style={{margin:'auto', backgroundColor: 'var(--background-secondary)' }}>
         <div className="w-full px-6 lg:px-12 xl:px-16">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -1051,13 +982,13 @@ export default function LandingPage() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-48 relative" style={{ backgroundColor: 'var(--background-primary)' }}>
+      <section id="contact" className="min-h-screen flex items-center justify-center relative py-20" style={{ backgroundColor: 'var(--background-primary)' }}>
         <div className="w-full px-6 lg:px-12 xl:px-16">
           <div className="text-center mb-20">
             <h2 className="text-5xl lg:text-6xl font-bold mb-8">
               <span className="neon-text">Get In Touch</span>
             </h2>
-            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{margin:'auto', color: 'var(--text-secondary)' }}>
               Have questions? We're here to help. Reach out and we'll get back to you as soon as possible.
             </p>
           </div>
