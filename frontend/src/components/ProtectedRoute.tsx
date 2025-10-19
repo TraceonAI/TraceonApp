@@ -22,14 +22,14 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg-primary)' }}>
         <div className="text-center">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 rounded-xl inline-block mb-4">
-            <Brain className="w-8 h-8 text-white" />
+          <div className="glass-effect neon-border p-6 rounded-xl inline-block mb-4">
+            <Brain className="w-12 h-12 neon-text" />
           </div>
-          <div className="flex items-center justify-center space-x-2 text-gray-600">
+          <div className="flex items-center justify-center space-x-2" style={{ color: 'var(--text-secondary)' }}>
             <Loader2 className="w-5 h-5 animate-spin" />
-            <span>Loading TraceonAI...</span>
+            <span>Loading TraceonAI Dashboard...</span>
           </div>
         </div>
       </div>

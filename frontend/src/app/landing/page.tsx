@@ -1,172 +1,270 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useState, useEffect, useRef } from 'react';
 import { 
   Brain, 
-  Zap, 
+  Rocket, 
   Shield, 
+  Activity, 
+  ChevronRight, 
+  Play, 
+  Zap, 
+  Timer, 
   TrendingUp, 
   Users, 
-  Clock, 
-  CheckCircle, 
-  ArrowRight,
-  Play,
-  Github,
-  Twitter,
-  Linkedin,
-  Star,
+  MessageCircle,
+  AlertTriangle,
+  CheckCircle,
   Code,
   Database,
   Network,
-  Terminal,
-  Activity,
+  Monitor,
+  Bell,
+  GitBranch,
+  BarChart3,
+  Lock,
+  Cloud,
+  Server,
   Cpu,
   HardDrive,
-  Monitor,
-  Sparkles,
-  ChevronRight,
-  MousePointer2,
-  Rocket
+  Gauge,
+  Target,
+  ArrowRight,
+  Plus,
+  Hexagon,
+  Mail,
+  Github,
+  Linkedin,
+  Youtube,
+  Slack
 } from 'lucide-react';
+import LogoLoop from '@/components/LogoLoop';
+import ScrollStack, { ScrollStackItem } from '@/components/ScrollStack';
+import SpotlightCard from '@/components/SpotlightCard';
+import { 
+  SiPostgresql, 
+  SiMysql, 
+  SiMongodb, 
+  SiDatadog, 
+  SiSplunk, 
+  SiOpensearch,
+  SiSlack,
+  SiOpenai,
+  SiKubernetes,
+  SiDocker,
+  SiAmazon,
+  SiGooglecloud,
+  SiPrometheus,
+  SiGrafana,
+  SiElasticsearch,
+  SiRedis,
+  SiApachekafka,
+  SiTerraform,
+  SiAnsible,
+  SiJenkins,
+  SiGithubactions,
+  SiPagerduty,
+  SiSnowflake,
+  SiApache
+} from 'react-icons/si';
+
+// AI SRE Features
+const aiFeatures = [
+  {
+    icon: Brain,
+    title: "Predictive Intelligence",
+    description: "AI models trained on millions of incidents predict failures 4 hours before they occur, reducing MTTR by 85%."
+  },
+  {
+    icon: Shield,
+    title: "Autonomous Remediation", 
+    description: "Self-healing systems automatically resolve 90% of incidents without human intervention using ML-driven playbooks."
+  },
+  {
+    icon: Activity,
+    title: "Real-Time Observability",
+    description: "Comprehensive monitoring across all layers with intelligent correlation and root cause analysis in seconds."
+  },
+  {
+    icon: Target,
+    title: "SLO Management",
+    description: "Automated SLI tracking and error budget management with predictive alerting to prevent SLO violations."
+  },
+  {
+    icon: Gauge,
+    title: "Performance Optimization",
+    description: "Continuous performance tuning using AI to optimize resource allocation and eliminate bottlenecks."
+  },
+  {
+    icon: Lock,
+    title: "Security Integration",
+    description: "Built-in security monitoring with threat detection and automated compliance reporting for SOC 2 & ISO 27001."
+  }
+];
+
+// Feature tags for the slider
+const featureTags = [
+  { icon: Brain, text: "AI-Powered SRE" },
+  { icon: Shield, text: "Autonomous Healing" },
+  { icon: Activity, text: "99.99% Uptime" },
+  { icon: Zap, text: "Sub-second Response" },
+  { icon: Target, text: "SLO Management" },
+  { icon: Lock, text: "Security First" },
+  { icon: BarChart3, text: "Real-time Analytics" },
+  { icon: Code, text: "Infrastructure as Code" }
+];
+
+// Integration technologies
+const integrations = [
+  { name: "Kubernetes", icon: "🎯", color: "text-blue-400" },
+  { name: "AWS", icon: "☁️", color: "text-orange-400" },
+  { name: "Prometheus", icon: "📊", color: "text-red-400" },
+  { name: "Grafana", icon: "📈", color: "text-orange-400" },
+  { name: "Docker", icon: "🐳", color: "text-blue-400" },
+  { name: "Terraform", icon: "🏗️", color: "text-purple-400" },
+  { name: "Datadog", icon: "🐕", color: "text-purple-600" },
+  { name: "PagerDuty", icon: "📟", color: "text-green-400" }
+];
+
+// LogoLoop Integration Icons
+const integrationLogos = [
+  // Databases
+  { node: <SiPostgresql style={{ color: 'var(--neon-blue)' }} />, title: "PostgreSQL" },
+  { node: <SiMysql style={{ color: 'var(--neon-blue)' }} />, title: "MySQL" },
+  { node: <SiMongodb style={{ color: 'var(--neon-green)' }} />, title: "MongoDB" },
+  { node: <SiSnowflake style={{ color: 'var(--neon-blue)' }} />, title: "Snowflake" },
+  { node: <SiRedis style={{ color: 'var(--neon-red)' }} />, title: "Redis" },
+  
+  // Monitoring & Observability
+  { node: <SiDatadog style={{ color: 'var(--neon-purple)' }} />, title: "Datadog" },
+  { node: <SiSplunk style={{ color: 'var(--neon-green)' }} />, title: "Splunk" },
+  { node: <SiOpensearch style={{ color: 'var(--neon-blue)' }} />, title: "OpenSearch" },
+  { node: <SiPrometheus style={{ color: 'var(--neon-red)' }} />, title: "Prometheus" },
+  { node: <SiGrafana style={{ color: 'var(--neon-orange)' }} />, title: "Grafana" },
+  { node: <SiElasticsearch style={{ color: 'var(--neon-blue)' }} />, title: "Elasticsearch" },
+  
+  // Communication
+  { node: <SiSlack style={{ color: 'var(--neon-purple)' }} />, title: "Slack" },
+  { node: <Mail style={{ color: 'var(--neon-blue)' }} />, title: "Email" },
+  { node: <SiPagerduty style={{ color: 'var(--neon-green)' }} />, title: "PagerDuty" },
+  
+  // AI/ML Platforms
+  { node: <SiOpenai style={{ color: 'var(--neon-green)' }} />, title: "OpenAI" },
+  { node: <Brain style={{ color: 'var(--neon-purple)' }} />, title: "Anthropic" },
+  
+  // Cloud Providers
+  { node: <SiAmazon style={{ color: 'var(--neon-orange)' }} />, title: "AWS" },
+  { node: <SiGooglecloud style={{ color: 'var(--neon-blue)' }} />, title: "Google Cloud" },
+  { node: <Cloud style={{ color: 'var(--neon-purple)' }} />, title: "Azure" },
+  
+  // Container & Orchestration
+  { node: <SiKubernetes style={{ color: 'var(--neon-blue)' }} />, title: "Kubernetes" },
+  { node: <SiDocker style={{ color: 'var(--neon-blue)' }} />, title: "Docker" },
+  
+  // Infrastructure as Code
+  { node: <SiTerraform style={{ color: 'var(--neon-purple)' }} />, title: "Terraform" },
+  { node: <SiAnsible style={{ color: 'var(--neon-red)' }} />, title: "Ansible" },
+  
+  // CI/CD
+  { node: <SiJenkins style={{ color: 'var(--neon-red)' }} />, title: "Jenkins" },
+  { node: <SiGithubactions style={{ color: 'var(--neon-blue)' }} />, title: "GitHub Actions" },
+  
+  // Message Queues
+  { node: <SiApachekafka style={{ color: 'var(--text-primary)' }} />, title: "Apache Kafka" },
+  { node: <SiApache style={{ color: 'var(--neon-red)' }} />, title: "Apache" },
+];
 
 export default function LandingPage() {
-  const [activeFeature, setActiveFeature] = useState(0);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Scroll animation observer
   useEffect(() => {
-    setIsLoaded(true);
-    
-    const timer = setInterval(() => {
-      setActiveFeature((prev) => (prev + 1) % 3);
-    }, 4000);
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    
-    return () => {
-      clearInterval(timer);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, observerOptions);
+
+    // Observe all scroll-fade-in elements
+    const elements = document.querySelectorAll('.scroll-fade-in');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
   }, []);
 
-  const features = [
-    {
-      icon: Brain,
-      title: 'Intelligent Root Cause Analysis',
-      description: 'Advanced neural networks process millions of log entries to identify patterns humans miss, delivering actionable insights in real-time.',
-      tech: 'Powered by transformer models and graph neural networks'
-    },
-    {
-      icon: Network,
-      title: 'Distributed System Intelligence',
-      description: 'Map complex microservice interactions and trace issues across your entire infrastructure with precision.',
-      tech: 'Real-time distributed tracing and correlation'
-    },
-    {
-      icon: Cpu,
-      title: 'Predictive Anomaly Detection',
-      description: 'Machine learning models trained on your specific environment predict and prevent incidents before they impact users.',
-      tech: 'Time-series analysis with adaptive thresholds'
-    }
-  ];
-
-  const stats = [
-    { value: '4.2s', label: 'Mean Detection Time' },
-    { value: '99.7%', label: 'Accuracy Rate' },
-    { value: '73%', label: 'MTTR Reduction' },
-    { value: '∞', label: 'Scale Capacity' }
-  ];
-
-  const testimonials = [
-    {
-      quote: "TraceonAI's neural analysis reduced our P0 incidents by 87%. It's like having a team of senior SREs working around the clock.",
-      author: "Dr. Sarah Chen",
-      role: "VP of Engineering",
-      company: "Vertex Systems",
-      metric: "87% fewer P0 incidents"
-    },
-    {
-      quote: "The distributed tracing capabilities are revolutionary. We can now visualize our entire microservice mesh in real-time.",
-      author: "Alex Kumar",
-      role: "Principal SRE",
-      company: "CloudFlow",
-      metric: "15min → 2min MTTR"
-    },
-    {
-      quote: "Predictive insights caught 94% of potential outages before they happened. Our uptime went from 99.5% to 99.97%.",
-      author: "Dr. Emily Rodriguez",
-      role: "CTO",
-      company: "Scale Dynamics",
-      metric: "99.97% uptime achieved"
-    }
-  ];
-
-  const techStack = [
-    { name: 'Kubernetes', category: 'Orchestration' },
-    { name: 'Grafana', category: 'Observability' },
-    { name: 'Elasticsearch', category: 'Search' },
-    { name: 'Prometheus', category: 'Metrics' },
-    { name: 'Datadog', category: 'Monitoring' },
-    { name: 'Splunk', category: 'Analytics' },
-    { name: 'New Relic', category: 'APM' },
-    { name: 'PagerDuty', category: 'Incident' }
-  ];
-
   return (
-    <div className="min-h-screen bg-gray-950 overflow-hidden">
-      {/* Cursor follower effect */}
-      <div 
-        className="fixed w-6 h-6 rounded-full bg-cyan-400/20 pointer-events-none z-50 transition-all duration-300 ease-out"
-        style={{
-          left: mousePosition.x - 12,
-          top: mousePosition.y - 12,
-          transform: `scale(${mousePosition.x > 0 ? 1 : 0})`,
-        }}
-      />
+    <div className="min-h-screen w-full" style={{ backgroundColor: 'var(--bg-primary)' }}>
+      {/* Neon Grid Background */}
+      <div className="fixed inset-0 opacity-20 pointer-events-none">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            linear-gradient(rgba(124, 58, 237, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(124, 58, 237, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }}></div>
+      </div>
+
+      {/* Floating Neon Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="neon-glow absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-30"></div>
+        <div className="neon-glow absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-20" style={{ animationDelay: '2s' }}></div>
+      </div>
 
       {/* Navigation */}
-      <nav className="fixed w-full z-40 bg-gray-950/90 backdrop-blur-md border-b border-gray-800/50 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3 group">
-              <div className="bg-gradient-to-r from-cyan-400 to-purple-400 p-2 rounded-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 animate-glow">
-                <Brain className="w-6 h-6 text-gray-900" />
+      <nav className="relative z-50 glass-effect border-b" style={{ borderColor: 'var(--border-primary)' }}>
+        <div className="w-full px-4 lg:px-8 xl:px-12">
+          <div className="flex justify-between items-center h-20 py-4">
+            {/* Logo */}
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <Hexagon className="w-8 h-8 neon-text" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Brain className="w-4 h-4" style={{ color: 'var(--bg-primary)' }} />
+                </div>
               </div>
-              <span className="text-xl font-bold text-white transition-all duration-300 group-hover:text-cyan-400">TraceonAI</span>
+              <div className="flex flex-col">
+                <span className="text-lg font-bold neon-text">TraceonAI</span>
+                <span className="text-xs font-mono" style={{ color: 'var(--neon-blue)' }}>AI SRE Platform</span>
+              </div>
             </div>
             
+            {/* Center Menu */}
             <div className="hidden md:flex items-center space-x-8">
-              {['Platform', 'Research', 'Enterprise'].map((item, index) => (
+              {[
+                { name: 'Features', href: '#features' },
+                { name: 'Pricing', href: '#pricing' },
+                { name: 'About', href: '#about' },
+                { name: 'Contact', href: '#contact' }
+              ].map((item) => (
                 <a 
-                  key={item}
-                  href={`#${item.toLowerCase()}`} 
-                  className="relative text-gray-300 hover:text-white transition-all duration-300 hover:scale-105 group"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                  key={item.name}
+                  href={item.href}
+                  className="text-sm font-medium transition-all duration-300 relative group"
+                  style={{ color: 'var(--text-secondary)' }}
                 >
-                  {item}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400 transition-all duration-300 group-hover:w-full" />
+                  {item.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-blue-500 group-hover:w-full transition-all duration-300"></span>
                 </a>
               ))}
-              <Link 
-                href="/login" 
-                className="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105 relative group"
-              >
+            </div>
+            
+            {/* Actions */}
+            <div className="flex items-center space-x-4">
+              <Link href="/login" className="btn-secondary">
                 Sign In
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400 transition-all duration-300 group-hover:w-full" />
               </Link>
-              <Link 
-                href="/login" 
-                className="bg-gradient-to-r from-cyan-400 to-purple-400 text-gray-900 px-6 py-2 rounded-lg hover:opacity-90 transition-all duration-300 font-medium hover:scale-105 hover:shadow-lg hover:shadow-cyan-400/25 animate-shimmer group"
-              >
-                <span className="relative z-10 flex items-center space-x-2">
-                  <Rocket className="w-4 h-4 transition-transform group-hover:rotate-12" />
-                  <span>Get Access</span>
-                </span>
+              <Link href="/signup" className="btn-primary">
+                Start Free Trial
+                <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           </div>
@@ -174,426 +272,1048 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 relative overflow-hidden">
-        {/* Multi-layer Background Effects */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-950 via-gray-900 to-purple-950/20"></div>
-        
-        {/* Custom Pattern Layers */}
-        <div className="absolute inset-0 pattern-circuit opacity-30"></div>
-        <div className="absolute inset-0 pattern-dots opacity-20"></div>
-        <div className="absolute inset-0 pattern-waves opacity-10"></div>
-        
-        {/* Animated Geometric Shapes */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-cyan-400/10 to-purple-400/10 rounded-full animate-float animate-morphing"></div>
-          <div className="absolute top-40 right-32 w-24 h-24 bg-gradient-to-r from-purple-400/10 to-cyan-400/10 rounded-lg rotate-45 animate-float" style={{animationDelay: '2s'}}></div>
-          <div className="absolute bottom-32 left-1/4 w-16 h-16 bg-gradient-to-r from-cyan-400/20 to-purple-400/20 rounded-full animate-float" style={{animationDelay: '4s'}}></div>
-        </div>
-        
-        {/* Interactive Grid Pattern */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute inset-0 pattern-grid animate-pulse"></div>
-        </div>
-        
-        {/* Enhanced Floating Particles */}
-        <div className="absolute inset-0">
-          {[...Array(12)].map((_, i) => (
-            <div
-              key={i}
-              className={`absolute w-2 h-2 bg-cyan-400 rounded-full animate-ping`}
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${2 + Math.random() * 2}s`
-              }}
-            />
-          ))}
-        </div>
-        
-        {/* Radial Gradients with Animation */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(6,182,212,0.15),transparent_70%)] animate-pulse"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(147,51,234,0.15),transparent_70%)] animate-pulse" style={{animationDelay: '1s'}}></div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className={`text-center max-w-4xl mx-auto transition-all duration-1000 ${isLoaded ? 'animate-fadeInUp' : 'opacity-0'}`}>
-            <div className="inline-flex items-center bg-gray-800/50 border border-gray-700 text-cyan-400 px-4 py-2 rounded-full text-sm font-medium mb-8 backdrop-blur-sm hover:bg-gray-800/70 transition-all duration-300 hover:scale-105 group animate-shimmer">
-              <Sparkles className="w-4 h-4 mr-2 animate-spin" style={{animationDuration: '3s'}} />
-              <span className="group-hover:text-white transition-colors">The AI platform for intelligent systems</span>
+      <section className="relative py-48 overflow-hidden">
+        <div className="w-full px-6 lg:px-12 xl:px-16 text-center relative z-10">
+          <div className="space-y-16">
+            {/* Hero Content */}
+            <div className="space-y-8">
+              <div className="inline-flex items-center px-4 py-2 rounded-full glass-effect neon-border mb-8">
+                <Zap className="w-4 h-4 mr-2" style={{ color: 'var(--neon-blue)' }} />
+                <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                  Now with AI-powered autonomous healing
+                </span>
+              </div>
+              
+              <h1 className="text-6xl lg:text-7xl font-bold leading-tight">
+                <span className="neon-text">Developer infrastructure</span>
+                <br />
+                <span style={{ color: 'var(--text-primary)' }}>built for your </span>
+                <span className="neon-text">team</span>
+              </h1>
+              
+              <p className="text-xl max-w-4xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                TraceonAI works seamlessly with the technologies you already use. 
+                Predictive AI that prevents outages before they happen, with autonomous 
+                remediation that maintains 99.99% uptime.
+              </p>
             </div>
-            
-            <h1 className="text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
-              <span className="inline-block animate-slideIn">Turn system chaos into</span>
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 animate-shimmer inline-block" style={{animationDelay: '0.3s'}}>intelligent order</span>
-            </h1>
-            
-            <p className={`text-xl text-gray-300 mb-12 leading-relaxed max-w-3xl mx-auto transition-all duration-800 ${isLoaded ? 'animate-fadeInUp' : 'opacity-0'}`} style={{animationDelay: '0.6s'}}>
-              TraceonAI transforms complex distributed systems into comprehensible intelligence. 
-              Our neural networks decode the language of your infrastructure, revealing patterns 
-              that traditional monitoring cannot see.
-            </p>
-            
-            <div className={`flex flex-col sm:flex-row gap-6 justify-center mb-16 transition-all duration-1000 ${isLoaded ? 'animate-scaleIn' : 'opacity-0'}`} style={{animationDelay: '0.9s'}}>
-              <Link 
-                href="/login"
-                className="bg-gradient-to-r from-cyan-400 to-purple-400 text-gray-900 px-8 py-4 rounded-lg hover:opacity-90 transition-all duration-300 flex items-center justify-center space-x-2 text-lg font-medium hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/25 group animate-glow"
-              >
-                <span>Experience the Platform</span>
-                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
+              <Link href="/signup" className="btn-primary text-lg px-8 py-4">
+                Start free trial
+                <ArrowRight className="w-5 h-5" />
               </Link>
-              <button className="border border-gray-600 text-gray-300 px-8 py-4 rounded-lg hover:bg-gray-800/50 transition-all duration-300 flex items-center justify-center space-x-2 text-lg font-medium backdrop-blur-sm hover:scale-105 hover:border-cyan-400/50 group">
-                <Play className="w-5 h-5 transition-transform group-hover:scale-110" />
-                <span className="group-hover:text-white transition-colors">View Documentation</span>
-              </button>
+              <Link href="/login" className="btn-secondary text-lg px-8 py-4">
+                Sign in to dashboard
+              </Link>
             </div>
-            
-            <div className={`flex items-center justify-center space-x-8 text-sm text-gray-400 transition-all duration-1000 ${isLoaded ? 'animate-fadeInUp' : 'opacity-0'}`} style={{animationDelay: '1.2s'}}>
-              {[
-                { color: 'bg-green-400', text: 'Real-time processing' },
-                { color: 'bg-cyan-400', text: 'Enterprise ready' },
-                { color: 'bg-purple-400', text: 'Self-improving AI' }
-              ].map((item, index) => (
-                <div key={index} className="flex items-center space-x-2 hover:text-white transition-colors group">
-                  <div className={`w-2 h-2 ${item.color} rounded-full animate-pulse group-hover:animate-ping`} style={{animationDelay: `${index * 0.2}s`}}></div>
-                  <span>{item.text}</span>
-                </div>
-              ))}
+
+            {/* Trust Indicators */}
+            <div className="pt-16 space-y-6">
+              <p className="text-sm font-medium uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
+                Built for the world's fastest engineering teams, now available for everyone
+              </p>
+              <div className="flex items-center justify-center gap-12 opacity-60">
+                <div className="text-2xl">🚀</div>
+                <div className="text-2xl">⚡</div>
+                <div className="text-2xl">🛡️</div>
+                <div className="text-2xl">🎯</div>
+                <div className="text-2xl">🔥</div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Interactive Stats Section */}
-      <section className="py-20 relative">
-        {/* Pattern Background */}
-        <div className="absolute inset-0 pattern-hexagon opacity-10"></div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div 
-                key={index} 
-                className={`text-center group transition-all duration-500 hover:scale-105 ${isLoaded ? 'animate-fadeInUp' : 'opacity-0'}`}
-                style={{animationDelay: `${index * 0.2 + 1.5}s`}}
-              >
-                <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 hover:border-cyan-400/50 transition-all duration-300 backdrop-blur-sm group-hover:bg-gray-800/70 relative overflow-hidden">
-                  {/* Hover effect overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-purple-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  
-                  <div className="relative z-10">
-                    <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-2 group-hover:scale-110 transition-transform duration-300">
-                      {stat.value}
+      {/* Feature Showcase - Graphite Style */}
+      <section className="py-56 relative">
+        <div className="w-full px-6 lg:px-12 xl:px-16">
+          <div className="text-center mb-28">
+            <h2 className="text-4xl lg:text-5xl font-bold mb-8">
+              <span style={{ color: 'var(--text-primary)' }}>Where change happens</span>
+            </h2>
+            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              Organizations that adopt TraceonAI ship more code with smaller incidents 
+              and faster recovery cycles.
+            </p>
+          </div>
+
+          {/* 3D Feature Cards */}
+          <div className="relative max-w-6xl mx-auto">
+            <div className="space-y-12">
+              {/* AI Intelligence Card */}
+              <div className="glass-effect neon-border p-10 rounded-2xl transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
+                <div className="grid lg:grid-cols-2 gap-10 items-center">
+                  <div>
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-12 h-12 rounded-xl glass-effect flex items-center justify-center">
+                        <Brain className="w-6 h-6" style={{ color: 'var(--neon-purple)' }} />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold neon-text">Predictive Intelligence</h3>
+                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>AI models predict failures before they occur</p>
+                      </div>
                     </div>
-                    <div className="text-gray-400 text-sm font-medium group-hover:text-gray-300 transition-colors">{stat.label}</div>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span style={{ color: 'var(--text-secondary)' }}>MTTR Reduction</span>
+                        <span className="neon-text font-bold text-xl">85%</span>
+                      </div>
+                      <div className="w-full bg-gray-800 rounded-full h-3">
+                        <div className="bg-gradient-to-r from-purple-500 to-blue-500 h-3 rounded-full shadow-lg" style={{ width: '85%' }}></div>
+                      </div>
+                    </div>
                   </div>
-                  
-                  {/* Animated border */}
-                  <div className="absolute inset-0 rounded-xl border-2 border-transparent bg-gradient-to-r from-cyan-400/20 to-purple-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{padding: '1px'}}></div>
+                  <div className="glass-effect rounded-xl p-6 bg-gradient-to-br from-purple-900/20 to-blue-900/20">
+                    <pre className="text-sm font-mono text-green-400">
+{`> AI Analysis Complete
+  Anomaly detected: CPU spike pattern
+  Prediction: Service failure in 3.2 hours
+  Auto-scaling: +3 instances
+  Status: ✅ Incident prevented`}
+                    </pre>
+                  </div>
                 </div>
+              </div>
+
+              {/* Autonomous Healing Card */}
+              <div className="glass-effect neon-border p-10 rounded-2xl transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
+                <div className="grid lg:grid-cols-2 gap-10 items-center">
+                  <div className="glass-effect rounded-xl p-6 bg-gradient-to-br from-green-900/20 to-teal-900/20 lg:order-2">
+                    <pre className="text-sm font-mono text-blue-400">
+{`> Incident Detected
+  Service: payment-api
+  Error Rate: 15% → Auto-healing initiated
+  Rollback: Deployed v2.1.3
+  Recovery Time: 47 seconds
+  Status: ✅ Service restored`}
+                    </pre>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-12 h-12 rounded-xl glass-effect flex items-center justify-center">
+                        <Shield className="w-6 h-6" style={{ color: 'var(--neon-green)' }} />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold neon-text">Autonomous Remediation</h3>
+                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Self-healing systems resolve incidents automatically</p>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span style={{ color: 'var(--text-secondary)' }}>Incidents Auto-Resolved</span>
+                        <span className="neon-text font-bold text-xl">90%</span>
+                      </div>
+                      <div className="w-full bg-gray-800 rounded-full h-3">
+                        <div className="bg-gradient-to-r from-green-500 to-teal-500 h-3 rounded-full shadow-lg" style={{ width: '90%' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA - Graphite Style */}
+      <section className="py-56 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-blue-900/20"></div>
+          <div className="neon-glow absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-full opacity-20"></div>
+        </div>
+        
+        <div className="w-full px-6 lg:px-12 xl:px-16 text-center relative z-10">
+          <div className="max-w-5xl mx-auto space-y-20">
+            <div className="space-y-8">
+              <h2 className="text-5xl lg:text-6xl font-bold mb-10 leading-tight">
+                <span style={{ color: 'var(--text-primary)' }}>Built for the world's fastest</span>
+                <br />
+                <span className="neon-text">engineering teams</span>
+                <br />
+                <span style={{ color: 'var(--text-primary)' }}>now available for everyone</span>
+              </h2>
+              <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                Join 500+ engineering teams already using TraceonAI to maintain 99.99% uptime 
+                and reduce incident response time by 85%.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+              <Link href="/dashboard" className="btn-secondary text-lg px-10 py-5">
+                Request a demo
+              </Link>
+              <Link href="/signup" className="btn-primary text-lg px-10 py-5">
+                Start free trial
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* AI Assistant Section */}
+      <section className="py-40" style={{ backgroundColor: 'var(--background-primary)' }}>
+        <div className="w-full px-4 lg:px-8 xl:px-12">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Large Media Card */}
+            <div className="card-primary p-8 background-glow corner-plus">
+              <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--teal)' }}>
+                    <Brain className="w-6 h-6" style={{ color: 'var(--background-primary)' }} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>AI SRE Assistant</h3>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Your intelligent reliability partner</p>
+                  </div>
+                </div>
+                
+                <div className="h-64 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--background-secondary)' }}>
+                  <div className="text-center space-y-4">
+                    <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center animate-pulse-custom" style={{ backgroundColor: 'var(--teal)' }}>
+                      <Activity className="w-8 h-8" style={{ color: 'var(--background-primary)' }} />
+                    </div>
+                    <div className="space-y-2">
+                      <p className="font-mono text-sm" style={{ color: 'var(--teal)' }}>$ traceon analyze --incident=prod-db-spike</p>
+                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Analyzing incident patterns...</p>
+                      <p className="text-sm" style={{ color: 'var(--green)' }}>✅ Root cause identified: Memory leak in user service</p>
+                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Suggested fix: Implement connection pooling</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Vertical Benefits List */}
+            <div className="space-y-6">
+              <div className="accent-line">
+                <h2 className="text-section mb-4">Intelligent Operations</h2>
+                <p className="text-body">
+                  Our AI assistant continuously learns from your infrastructure patterns to provide
+                  proactive insights and automated remediation strategies.
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                {[
+                  { icon: Target, title: "Predictive Analysis", desc: "Forecast issues 4-6 hours before they impact users" },
+                  { icon: Zap, title: "Auto-Remediation", desc: "Resolve 90% of incidents without human intervention" },
+                  { icon: BarChart3, title: "Performance Insights", desc: "Continuous optimization recommendations" },
+                  { icon: CheckCircle, title: "SLO Management", desc: "Automated tracking and error budget alerts" }
+                ].map((benefit, index) => (
+                  <div key={index} className="flex gap-4 p-4 rounded-lg transition-colors duration-300 hover:bg-gray-800/50">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--background-card)' }}>
+                      <benefit.icon className="w-5 h-5" style={{ color: 'var(--teal)' }} />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>{benefit.title}</h4>
+                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{benefit.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Feature Demonstration with ScrollStack */}
+      <section className="py-20" style={{ backgroundColor: 'var(--bg-primary)' }}>
+        <div className="w-full px-4 lg:px-8 xl:px-12">
+          <div className="text-center mb-12">
+            <h2 className="text-section mb-4 text-reveal">Intelligent SRE Platform</h2>
+            <p className="text-body max-w-4xl mx-auto scroll-fade-in">
+              Experience our AI-powered capabilities through interactive demonstrations
+            </p>
+          </div>
+        </div>
+        
+        <ScrollStack
+          className="scroll-stack-wrapper"
+          itemDistance={150}
+          itemScale={0.05}
+          itemStackDistance={40}
+          stackPosition="30%"
+          scaleEndPosition="15%"
+          baseScale={0.88}
+          useWindowScroll={false}
+        >
+          {/* Card 1: Intelligent Operations */}
+          <ScrollStackItem itemClassName="card-primary">
+            <div className="space-y-6">
+              <div className="accent-line">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                    <Brain className="w-6 h-6" style={{ color: 'var(--neon-blue)' }} />
+                  </div>
+                  <h2 className="text-3xl font-bold neon-text">Intelligent Operations</h2>
+                </div>
+                <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+                  Our AI assistant continuously learns from your infrastructure patterns to provide
+                  proactive insights and automated remediation strategies.
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-4 mt-6">
+                {[
+                  { icon: Target, title: "Predictive Analysis", desc: "Forecast issues 4-6 hours before they impact users" },
+                  { icon: Zap, title: "Auto-Remediation", desc: "Resolve 90% of incidents without human intervention" },
+                  { icon: BarChart3, title: "Performance Insights", desc: "Continuous optimization recommendations" },
+                  { icon: CheckCircle, title: "SLO Management", desc: "Automated tracking and error budget alerts" }
+                ].map((benefit, index) => (
+                  <div key={index} className="flex gap-3 p-4 rounded-lg glass-effect">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                      <benefit.icon className="w-5 h-5" style={{ color: 'var(--neon-green)' }} />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>{benefit.title}</h4>
+                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{benefit.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </ScrollStackItem>
+
+          {/* Card 2: Real-Time Monitoring */}
+          <ScrollStackItem itemClassName="card-primary">
+            <div className="space-y-6">
+              <div className="accent-line">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                    <Activity className="w-6 h-6" style={{ color: 'var(--neon-purple)' }} />
+                  </div>
+                  <h2 className="text-3xl font-bold neon-text">Real-Time Monitoring</h2>
+                </div>
+                <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+                  Comprehensive observability across your entire stack with intelligent alerting 
+                  that reduces noise by 95% and focuses on what matters.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6 mt-6">
+                <div className="space-y-4">
+                  <div className="icon-pill">
+                    <Activity className="icon" />
+                    <span>Live Infrastructure Metrics</span>
+                  </div>
+                  <div className="icon-pill">
+                    <BarChart3 className="icon" />
+                    <span>Application Performance Monitoring</span>
+                  </div>
+                  <div className="icon-pill">
+                    <Bell className="icon" />
+                    <span>Smart Alert Correlation</span>
+                  </div>
+                </div>
+
+                <div className="glass-effect p-4 rounded-lg">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>System Health</h4>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--neon-green)' }}></div>
+                        <span className="text-sm font-mono" style={{ color: 'var(--neon-green)' }}>HEALTHY</span>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                        <div className="text-2xl font-bold" style={{ color: 'var(--neon-green)' }}>99.97%</div>
+                        <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>Uptime</div>
+                      </div>
+                      <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                        <div className="text-2xl font-bold" style={{ color: 'var(--neon-blue)' }}>1.2ms</div>
+                        <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>Response</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ScrollStackItem>
+
+          {/* Card 3: Autonomous Response */}
+          <ScrollStackItem itemClassName="card-primary">
+            <div className="space-y-6">
+              <div className="accent-line">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                    <Shield className="w-6 h-6" style={{ color: 'var(--neon-green)' }} />
+                  </div>
+                  <h2 className="text-3xl font-bold neon-text">Autonomous Response</h2>
+                </div>
+                <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+                  AI-driven incident response that learns from every outage to build 
+                  smarter remediation strategies and prevent future occurrences.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6 mt-6">
+                <div className="glass-effect p-4 rounded-lg">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Incident Timeline</h4>
+                      <div className="text-xs font-mono" style={{ color: 'var(--neon-green)' }}>Auto-resolved in 47s</div>
+                    </div>
+                    {[
+                      { time: '14:32:15', event: 'Anomaly detected in payment service', status: 'detected' },
+                      { time: '14:32:22', event: 'AI analysis: Memory leak identified', status: 'analyzing' },
+                      { time: '14:32:35', event: 'Auto-restart initiated', status: 'resolving' },
+                      { time: '14:33:02', event: 'Service healthy, monitoring', status: 'resolved' }
+                    ].map((item, index) => (
+                      <div key={index} className="flex gap-3">
+                        <div className="flex-shrink-0 w-2 h-2 rounded-full mt-2" style={{ 
+                          backgroundColor: item.status === 'resolved' ? 'var(--neon-green)' : 
+                                         item.status === 'resolving' ? 'var(--neon-orange)' : 'var(--neon-blue)' 
+                        }}></div>
+                        <div>
+                          <div className="text-xs font-mono" style={{ color: 'var(--text-tertiary)' }}>{item.time}</div>
+                          <div className="text-sm" style={{ color: 'var(--text-primary)' }}>{item.event}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="icon-pill">
+                    <AlertTriangle className="icon" />
+                    <span>Intelligent Anomaly Detection</span>
+                  </div>
+                  <div className="icon-pill">
+                    <Shield className="icon" />
+                    <span>Automated Remediation</span>
+                  </div>
+                  <div className="icon-pill">
+                    <CheckCircle className="icon" />
+                    <span>Self-Healing Infrastructure</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ScrollStackItem>
+        </ScrollStack>
+      </section>
+
+      {/* Feature Grid */}
+      <section className="py-40 scroll-fade-in" style={{ backgroundColor: 'var(--background-primary)' }}>
+        <div className="w-full px-4 lg:px-8 xl:px-12">
+          <div className="text-center mb-16">
+            <h2 className="text-section mb-4 text-reveal">Complete SRE Platform</h2>
+            <p className="text-body max-w-4xl mx-auto scroll-fade-in">
+              Everything you need to build, deploy, and maintain reliable systems at scale.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {aiFeatures.map((feature, index) => (
+              <SpotlightCard 
+                key={index}
+                className="group hover:-translate-y-1 transition-transform duration-300 scroll-fade-in"
+                spotlightColor="rgba(0, 212, 255, 0.15)"
+                style={{animationDelay: `${index * 100}ms`} as React.CSSProperties}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center hover-scale" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                    <feature.icon className="w-5 h-5 icon-spin" style={{ color: 'var(--neon-blue)' }} />
+                  </div>
+                  <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>{feature.title}</h3>
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  {feature.description}
+                </p>
+              </SpotlightCard>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Developer Infrastructure Section */}
+      <section className="py-40 scroll-fade-in" style={{ backgroundColor: 'var(--background-secondary)' }}>
+        <div className="w-full px-4 lg:px-8 xl:px-12">
+          <div className="text-center mb-16">
+            <h2 className="text-section mb-4 text-reveal">Seamless Integrations</h2>
+            <p className="text-body max-w-4xl mx-auto scroll-fade-in mb-8">
+              Connect with your existing tools and workflows. TraceonAI integrates with 
+              100+ platforms to provide unified visibility across your entire stack.
+            </p>
+            <p className="text-sm scroll-fade-in" style={{ color: 'var(--text-secondary)' }}>
+              Our AI SRE seamlessly integrates with your entire technology ecosystem
+            </p>
+          </div>
+          
+          {/* Logo Loop Integration Showcase */}
+          <div className="mb-16" style={{ height: '120px', position: 'relative', overflow: 'hidden' }}>
+            <LogoLoop
+              logos={integrationLogos}
+              speed={40}
+              direction="left"
+              logoHeight={48}
+              gap={60}
+              pauseOnHover
+              scaleOnHover
+              fadeOut
+              fadeOutColor="#111111"
+              ariaLabel="Integration partners and tools"
+            />
+          </div>
+          
+          {/* Traditional Grid for Additional Context */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+            {integrations.map((integration, index) => (
+              <SpotlightCard 
+                key={index}
+                className="text-center group hover:scale-105 transition-transform duration-300 scroll-fade-in"
+                spotlightColor="rgba(139, 92, 246, 0.15)"
+                style={{animationDelay: `${index * 50}ms`}}
+              >
+                <div className="text-3xl mb-3 icon-float">{integration.icon}</div>
+                <h4 className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{integration.name}</h4>
+                <div className={`text-xs mt-1 ${integration.color} pulse-glow`}>Connected</div>
+              </SpotlightCard>
+            ))}
+          </div>
+          
+          <div className="text-center mt-12">
+            <button className="btn-secondary">
+              View All Integrations
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-40 relative overflow-hidden" style={{ backgroundColor: 'var(--background-primary)' }}>
+        {/* Decorative Hexagon Outlines */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="pattern-hexagon"></div>
+        </div>
+        
+        <div className="w-full px-4 lg:px-8 xl:px-12 text-center relative z-10 background-glow">
+          <div className="space-y-8">
+            <div className="space-y-6">
+              <h2 className="text-hero">
+                Ready to Eliminate Downtime?
+              </h2>
+              <p className="text-xl max-w-4xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
+                Join 500+ engineering teams already using TraceonAI to maintain 99.99% uptime 
+                and reduce incident response time by 85%.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/dashboard" className="btn-primary flex items-center gap-2">
+                <Rocket className="w-5 h-5" />
+                Start Free Trial
+              </Link>
+              <button className="gradient-secondary text-white px-8 py-3 rounded-2xl font-semibold flex items-center gap-2 transition-transform duration-300 hover:scale-105">
+                <MessageCircle className="w-5 h-5" />
+                Talk to Sales
+              </button>
+            </div>
+
+            <div className="pt-8 text-sm" style={{ color: 'var(--text-tertiary)' }}>
+              No credit card required • 14-day free trial • Setup in under 5 minutes
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-48 relative" style={{ backgroundColor: 'var(--background-secondary)' }}>
+        <div className="w-full px-6 lg:px-12 xl:px-16">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl lg:text-6xl font-bold mb-8">
+              <span className="neon-text">Powerful Features</span>
+            </h2>
+            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              Everything you need to build, deploy, and maintain reliable systems at scale with AI-powered automation.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {aiFeatures.map((feature, index) => (
+              <div key={index} className="card-primary p-8 group hover:-translate-y-2 transition-all duration-300">
+                <div className="w-14 h-14 rounded-xl glass-effect flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <feature.icon className="w-7 h-7" style={{ color: 'var(--neon-purple)' }} />
+                </div>
+                <h3 className="text-xl font-bold mb-4 neon-text">{feature.title}</h3>
+                <p className="leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  {feature.description}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Interactive Features Section */}
-      <section id="platform" className="py-24 relative">
-        {/* Circuit Board Pattern Background */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,rgba(6,182,212,0.3)_60deg,transparent_120deg)] bg-[size:100px_100px]"></div>
-        </div>
-        
-        {/* Moving Lines */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute w-px h-full bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent left-1/4 animate-pulse"></div>
-          <div className="absolute w-px h-full bg-gradient-to-b from-transparent via-purple-400/20 to-transparent right-1/4 animate-pulse delay-1000"></div>
-          <div className="absolute h-px w-full bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent top-1/3 animate-pulse delay-500"></div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`text-center mb-20 transition-all duration-1000 ${isLoaded ? 'animate-fadeInUp' : 'opacity-0'}`} style={{animationDelay: '2s'}}>
-            <h2 className="text-5xl font-bold text-white mb-6">
-              The intelligence infrastructure for
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 animate-shimmer"> next-generation systems</span>
+      {/* Pricing Section */}
+      <section id="pricing" className="py-48 relative" style={{ backgroundColor: 'var(--background-primary)' }}>
+        <div className="w-full px-6 lg:px-12 xl:px-16">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl lg:text-6xl font-bold mb-8">
+              <span className="neon-text">Simple, Transparent Pricing</span>
             </h2>
-            <p className="text-xl text-gray-400 max-w-4xl mx-auto leading-relaxed">
-              Our neural architecture transforms raw telemetry into actionable intelligence, 
-              delivering insights that scale with the complexity of modern distributed systems.
+            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              Choose the plan that fits your team's needs. All plans include 14-day free trial.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div 
-                key={index} 
-                className={`group relative bg-gray-800/30 border rounded-2xl p-8 transition-all duration-500 cursor-pointer backdrop-blur-sm hover:scale-105 ${
-                  activeFeature === index 
-                    ? 'border-cyan-400/50 bg-gray-800/50 shadow-xl shadow-cyan-400/10' 
-                    : 'border-gray-700 hover:border-gray-600'
-                } ${isLoaded ? 'animate-scaleIn' : 'opacity-0'}`}
-                style={{animationDelay: `${2.3 + index * 0.2}s`}}
-                onMouseEnter={() => setActiveFeature(index)}
-              >
-                {/* Animated background overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                
-                {/* Glowing border effect */}
-                <div className={`absolute inset-0 rounded-2xl transition-all duration-500 ${activeFeature === index ? 'animate-glow' : ''}`}></div>
-                
-                <div className="relative z-10">
-                  <div className="bg-gradient-to-r from-cyan-400/20 to-purple-400/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300 animate-morphing">
-                    <feature.icon className="w-8 h-8 text-cyan-400 group-hover:rotate-12 transition-transform duration-300" />
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Starter Plan */}
+            <SpotlightCard 
+              className="hover:-translate-y-2 transition-all duration-300"
+              spotlightColor="rgba(16, 185, 129, 0.12)"
+            >
+              <div className="mb-6">
+                <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Starter</h3>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Perfect for small teams</p>
+              </div>
+              <div className="mb-8">
+                <span className="text-5xl font-bold neon-text">$49</span>
+                <span className="text-lg" style={{ color: 'var(--text-secondary)' }}>/month</span>
+              </div>
+              <ul className="space-y-4 mb-8">
+                {[
+                  'Up to 5 services monitored',
+                  'Real-time alerting',
+                  'Basic AI predictions',
+                  '1GB log retention',
+                  'Email support',
+                  'API access'
+                ].map((feature, index) => (
+                  <li key={index} className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--neon-green)' }} />
+                    <span style={{ color: 'var(--text-primary)' }}>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link href="/signup" className="btn-secondary w-full justify-center">
+                Start Free Trial
+              </Link>
+            </SpotlightCard>
+
+            {/* Pro Plan - Featured */}
+            <SpotlightCard 
+              className="border-2 relative hover:-translate-y-2 transition-all duration-300"
+              spotlightColor="rgba(139, 92, 246, 0.2)"
+              style={{ borderColor: 'var(--neon-purple)' }}
+            >
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full text-sm font-semibold" style={{ backgroundColor: 'var(--neon-purple)', color: 'var(--bg-primary)' }}>
+                Most Popular
+              </div>
+              <div className="mb-6 mt-4">
+                <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Professional</h3>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>For growing teams</p>
+              </div>
+              <div className="mb-8">
+                <span className="text-5xl font-bold neon-text">$149</span>
+                <span className="text-lg" style={{ color: 'var(--text-secondary)' }}>/month</span>
+              </div>
+              <ul className="space-y-4 mb-8">
+                {[
+                  'Up to 20 services monitored',
+                  'Advanced AI predictions',
+                  'Auto-remediation',
+                  '10GB log retention',
+                  'Priority support',
+                  'Custom integrations',
+                  'SLO management',
+                  'Team collaboration'
+                ].map((feature, index) => (
+                  <li key={index} className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--neon-green)' }} />
+                    <span style={{ color: 'var(--text-primary)' }}>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link href="/signup" className="btn-primary w-full justify-center">
+                Start Free Trial
+              </Link>
+            </SpotlightCard>
+
+            {/* Enterprise Plan */}
+            <SpotlightCard 
+              className="hover:-translate-y-2 transition-all duration-300"
+              spotlightColor="rgba(0, 212, 255, 0.12)"
+            >
+              <div className="mb-6">
+                <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Enterprise</h3>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>For large organizations</p>
+              </div>
+              <div className="mb-8">
+                <span className="text-5xl font-bold neon-text">Custom</span>
+              </div>
+              <ul className="space-y-4 mb-8">
+                {[
+                  'Unlimited services',
+                  'Full AI automation',
+                  'Custom integrations',
+                  'Unlimited log retention',
+                  '24/7 dedicated support',
+                  'Custom SLA',
+                  'On-premise deployment',
+                  'Security compliance'
+                ].map((feature, index) => (
+                  <li key={index} className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--neon-green)' }} />
+                    <span style={{ color: 'var(--text-primary)' }}>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link href="/contact" className="btn-secondary w-full justify-center">
+                Contact Sales
+              </Link>
+            </SpotlightCard>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="py-48 relative" style={{ backgroundColor: 'var(--background-secondary)' }}>
+        <div className="w-full px-6 lg:px-12 xl:px-16">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-5xl lg:text-6xl font-bold mb-8">
+                  <span className="neon-text">About TraceonAI</span>
+                </h2>
+                <p className="text-xl leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
+                  We're on a mission to eliminate downtime and make reliability engineering accessible to every team, regardless of size or resources.
+                </p>
+                <p className="text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  Founded in 2024 by a team of experienced SREs and AI engineers, TraceonAI combines cutting-edge machine learning with battle-tested reliability practices to predict and prevent failures before they impact your users.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-8">
+                <div className="space-y-2">
+                  <div className="text-4xl font-bold neon-text">500+</div>
+                  <p style={{ color: 'var(--text-secondary)' }}>Companies Trust Us</p>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-4xl font-bold neon-text">99.99%</div>
+                  <p style={{ color: 'var(--text-secondary)' }}>Average Uptime</p>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-4xl font-bold neon-text">85%</div>
+                  <p style={{ color: 'var(--text-secondary)' }}>Faster Recovery</p>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-4xl font-bold neon-text">90%</div>
+                  <p style={{ color: 'var(--text-secondary)' }}>Auto-Resolved Incidents</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="card-primary p-8">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-xl glass-effect flex items-center justify-center">
+                    <Target className="w-6 h-6" style={{ color: 'var(--neon-purple)' }} />
                   </div>
-                  
-                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors duration-300">
-                    {feature.title}
-                  </h3>
-                  
-                  <p className="text-gray-400 mb-6 leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
-                    {feature.description}
-                  </p>
-                  
-                  <div className="text-sm text-cyan-400 font-mono bg-gray-900/50 px-3 py-2 rounded-lg border border-gray-700 group-hover:border-cyan-400/30 transition-all duration-300 hover:bg-gray-900/70">
-                    <MousePointer2 className="w-3 h-3 inline mr-2" />
-                    {feature.tech}
+                  <h3 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Our Mission</h3>
+                </div>
+                <p style={{ color: 'var(--text-secondary)' }}>
+                  To make site reliability engineering accessible to every engineering team through intelligent automation and predictive AI.
+                </p>
+              </div>
+
+              <div className="card-primary p-8">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-xl glass-effect flex items-center justify-center">
+                    <Shield className="w-6 h-6" style={{ color: 'var(--neon-green)' }} />
+                  </div>
+                  <h3 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Our Values</h3>
+                </div>
+                <p style={{ color: 'var(--text-secondary)' }}>
+                  We believe in transparency, reliability, and continuous improvement. Our platform is built on the principles of trust and security-first design.
+                </p>
+              </div>
+
+              <div className="card-primary p-8">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-xl glass-effect flex items-center justify-center">
+                    <Users className="w-6 h-6" style={{ color: 'var(--neon-blue)' }} />
+                  </div>
+                  <h3 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Our Team</h3>
+                </div>
+                <p style={{ color: 'var(--text-secondary)' }}>
+                  Built by engineers who have managed infrastructure at scale for companies like Google, Netflix, and Amazon.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-48 relative" style={{ backgroundColor: 'var(--background-primary)' }}>
+        <div className="w-full px-6 lg:px-12 xl:px-16">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl lg:text-6xl font-bold mb-8">
+              <span className="neon-text">Get In Touch</span>
+            </h2>
+            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              Have questions? We're here to help. Reach out and we'll get back to you as soon as possible.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-16">
+            {/* Contact Form */}
+            <div className="card-primary p-10">
+              <form className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Name</label>
+                  <input 
+                    type="text" 
+                    placeholder="John Doe"
+                    className="w-full px-4 py-3 rounded-lg glass-effect border focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                    style={{ 
+                      backgroundColor: 'var(--background-secondary)',
+                      borderColor: 'var(--border-primary)',
+                      color: 'var(--text-primary)'
+                    }}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Email</label>
+                  <input 
+                    type="email" 
+                    placeholder="john@company.com"
+                    className="w-full px-4 py-3 rounded-lg glass-effect border focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                    style={{ 
+                      backgroundColor: 'var(--background-secondary)',
+                      borderColor: 'var(--border-primary)',
+                      color: 'var(--text-primary)'
+                    }}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Company</label>
+                  <input 
+                    type="text" 
+                    placeholder="Company Name"
+                    className="w-full px-4 py-3 rounded-lg glass-effect border focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                    style={{ 
+                      backgroundColor: 'var(--background-secondary)',
+                      borderColor: 'var(--border-primary)',
+                      color: 'var(--text-primary)'
+                    }}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Message</label>
+                  <textarea 
+                    rows={6}
+                    placeholder="Tell us about your infrastructure needs..."
+                    className="w-full px-4 py-3 rounded-lg glass-effect border focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all resize-none"
+                    style={{ 
+                      backgroundColor: 'var(--background-secondary)',
+                      borderColor: 'var(--border-primary)',
+                      color: 'var(--text-primary)'
+                    }}
+                  />
+                </div>
+
+                <button type="submit" className="btn-primary w-full justify-center">
+                  Send Message
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </form>
+            </div>
+
+            {/* Contact Information */}
+            <div className="space-y-8">
+              <div className="card-primary p-8">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl glass-effect flex items-center justify-center flex-shrink-0">
+                    <Mail className="w-6 h-6" style={{ color: 'var(--neon-purple)' }} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Email Us</h3>
+                    <p className="mb-2" style={{ color: 'var(--text-secondary)' }}>Our team typically responds within 24 hours</p>
+                    <a href="mailto:hello@traceonai.com" className="text-lg neon-text hover:underline">
+                      hello@traceonai.com
+                    </a>
                   </div>
                 </div>
-                
-                {/* Interactive particles */}
-                <div className="absolute inset-0 pointer-events-none">
-                  {[...Array(3)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-1 h-1 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 animate-ping"
-                      style={{
-                        top: `${20 + Math.random() * 60}%`,
-                        left: `${20 + Math.random() * 60}%`,
-                        animationDelay: `${i * 0.3}s`
-                      }}
-                    />
+              </div>
+
+              <div className="card-primary p-8">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl glass-effect flex items-center justify-center flex-shrink-0">
+                    <MessageCircle className="w-6 h-6" style={{ color: 'var(--neon-blue)' }} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Live Chat</h3>
+                    <p className="mb-2" style={{ color: 'var(--text-secondary)' }}>Available Monday-Friday, 9am-6pm PST</p>
+                    <button className="text-lg neon-text hover:underline">
+                      Start Chat →
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card-primary p-8">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl glass-effect flex items-center justify-center flex-shrink-0">
+                    <Slack className="w-6 h-6" style={{ color: 'var(--neon-green)' }} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Join Our Community</h3>
+                    <p className="mb-2" style={{ color: 'var(--text-secondary)' }}>Connect with other users and our team</p>
+                    <a href="#" className="text-lg neon-text hover:underline">
+                      Join Slack Community →
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card-primary p-8">
+                <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>Connect With Us</h3>
+                <div className="flex gap-4">
+                  {[
+                    { icon: Github, href: '#', label: 'GitHub' },
+                    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+                    { icon: Youtube, href: '#', label: 'YouTube' },
+                    { icon: Slack, href: '#', label: 'Slack' }
+                  ].map((social, index) => (
+                    <a 
+                      key={index} 
+                      href={social.href}
+                      className="w-12 h-12 rounded-xl glass-effect flex items-center justify-center hover:scale-110 transition-transform duration-300"
+                      title={social.label}
+                    >
+                      <social.icon className="w-6 h-6" style={{ color: 'var(--neon-purple)' }} />
+                    </a>
                   ))}
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Tech Stack Integration */}
-      <section className="py-20 bg-gray-900/50 relative">
-        {/* Dot Grid Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_2px_2px,rgba(6,182,212,0.5)_1px,transparent_0)] bg-[size:30px_30px]"></div>
-        </div>
-        
-        {/* Scanning Lines */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent animate-pulse"></div>
-          <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-400/50 to-transparent animate-pulse delay-1000"></div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
-            Native integration with your stack
-          </h2>
-          <p className="text-xl text-gray-400 mb-16 max-w-3xl mx-auto">
-            TraceonAI seamlessly connects with your existing infrastructure, 
-            requiring zero changes to your current observability pipeline.
-          </p>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {techStack.map((tech, index) => (
-              <div key={index} className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 hover:border-cyan-400/30 transition-all duration-300 group backdrop-blur-sm">
-                <div className="text-lg font-semibold text-white mb-2 group-hover:text-cyan-400 transition-colors">
-                  {tech.name}
-                </div>
-                <div className="text-sm text-gray-500 font-mono">{tech.category}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Research & Testimonials */}
-      <section id="research" className="py-24 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-bold text-white mb-6">
-              Proven results from leading
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400"> engineering organizations</span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Our AI models are trained on petabytes of real-world infrastructure data, 
-              delivering measurable improvements across critical reliability metrics.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gray-800/30 border border-gray-700 rounded-2xl p-8 backdrop-blur-sm hover:border-cyan-400/30 transition-all duration-300 group">
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 to-purple-400/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                <div className="relative">
-                  <div className="flex items-center mb-6">
-                    <div className="bg-gradient-to-r from-cyan-400 to-purple-400 text-gray-900 px-3 py-1 rounded-full text-sm font-bold">
-                      {testimonial.metric}
-                    </div>
-                  </div>
-                  
-                  <blockquote className="text-gray-300 mb-8 italic text-lg leading-relaxed">
-                    "{testimonial.quote}"
-                  </blockquote>
-                  
-                  <div className="border-t border-gray-700 pt-6">
-                    <div className="font-bold text-white text-lg">{testimonial.author}</div>
-                    <div className="text-cyan-400 font-medium">{testimonial.role}</div>
-                    <div className="text-gray-500 text-sm font-mono">{testimonial.company}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section id="enterprise" className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 via-purple-600/20 to-cyan-600/20"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.15),transparent_70%)]"></div>
-        
-        {/* Particle Field */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/6 w-1 h-1 bg-cyan-400 rounded-full animate-ping delay-300"></div>
-          <div className="absolute top-1/2 left-1/4 w-0.5 h-0.5 bg-purple-400 rounded-full animate-pulse delay-700"></div>
-          <div className="absolute top-1/3 right-1/6 w-1.5 h-1.5 bg-cyan-300 rounded-full animate-ping delay-1100"></div>
-          <div className="absolute bottom-1/4 left-1/3 w-0.5 h-0.5 bg-purple-300 rounded-full animate-pulse delay-1500"></div>
-          <div className="absolute bottom-1/3 right-1/4 w-1 h-1 bg-cyan-500 rounded-full animate-ping delay-1900"></div>
-          <div className="absolute top-2/3 right-1/3 w-0.5 h-0.5 bg-purple-500 rounded-full animate-pulse delay-2300"></div>
-        </div>
-        
-        {/* Neural Network Lines */}
-        <div className="absolute inset-0 opacity-20">
-          <svg className="w-full h-full" viewBox="0 0 1000 400">
-            <defs>
-              <linearGradient id="line1" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="transparent" />
-                <stop offset="50%" stopColor="rgb(6,182,212)" />
-                <stop offset="100%" stopColor="transparent" />
-              </linearGradient>
-            </defs>
-            <path d="M0,200 Q250,100 500,200 T1000,200" stroke="url(#line1)" strokeWidth="1" fill="none" className="animate-pulse" />
-            <path d="M0,150 Q250,250 500,150 T1000,150" stroke="url(#line1)" strokeWidth="1" fill="none" className="animate-pulse delay-500" />
-          </svg>
-        </div>
-        
-        <div className="max-w-5xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative">
-          <h2 className="text-6xl font-bold text-white mb-8 leading-tight">
-            Ready to transform your
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400"> infrastructure intelligence?</span>
-          </h2>
-          
-          <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Join the next generation of engineering teams using AI to build more reliable, 
-            intelligent systems. Experience the future of observability.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
-            <Link 
-              href="/login"
-              className="bg-gradient-to-r from-cyan-400 to-purple-400 text-gray-900 px-10 py-5 rounded-xl hover:opacity-90 transition-opacity inline-flex items-center space-x-3 text-xl font-bold"
-            >
-              <span>Experience TraceonAI</span>
-              <ChevronRight className="w-6 h-6" />
-            </Link>
-            <button className="border border-gray-500 text-gray-300 px-10 py-5 rounded-xl hover:bg-gray-800/50 transition-colors inline-flex items-center space-x-3 text-xl font-medium backdrop-blur-sm">
-              <Code className="w-6 h-6" />
-              <span>View API Docs</span>
-            </button>
-          </div>
-          
-          <div className="flex items-center justify-center space-x-12 text-gray-400">
-            <div className="flex items-center space-x-3">
-              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="font-mono text-sm">Real-time deployment</span>
-            </div>
-            <div className="flex items-center space-x-3">
-              <Shield className="w-5 h-5 text-cyan-400" />
-              <span className="font-mono text-sm">Enterprise security</span>
-            </div>
-            <div className="flex items-center space-x-3">
-              <Activity className="w-5 h-5 text-purple-400" />
-              <span className="font-mono text-sm">99.99% SLA</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-950 border-t border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-12">
-            <div className="md:col-span-2">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="bg-gradient-to-r from-cyan-400 to-purple-400 p-2 rounded-lg">
-                  <Brain className="w-6 h-6 text-gray-900" />
+      <footer className="relative z-10 py-16 border-t" style={{ backgroundColor: 'var(--background-primary)', borderColor: 'var(--border)' }}>
+        <div className="w-full px-4 lg:px-8 xl:px-12">
+          <div className="grid md:grid-cols-4 gap-8">
+            {/* Company Info */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <Hexagon className="w-8 h-8" style={{ color: 'var(--teal)' }} />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Brain className="w-4 h-4" style={{ color: 'var(--background-primary)' }} />
+                  </div>
                 </div>
-                <span className="text-xl font-bold text-white">TraceonAI</span>
+                <span className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>TraceonAI</span>
               </div>
-              <p className="text-gray-400 mb-8 max-w-md leading-relaxed">
-                The AI platform that transforms complex distributed systems into 
-                comprehensible intelligence for next-generation engineering teams.
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                AI-powered site reliability engineering platform for modern infrastructure.
               </p>
-              <div className="flex space-x-6">
-                <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">
-                  <Twitter className="w-6 h-6" />
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full animate-pulse-custom" style={{ backgroundColor: 'var(--green)' }}></div>
+                <span className="text-sm status-online">All systems operational</span>
+              </div>
+            </div>
+
+            {/* Product Links */}
+            <div className="space-y-4">
+              <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Product</h4>
+              <div className="space-y-2">
+                <a href="#features" className="block text-sm footer-link">
+                  Platform
                 </a>
-                <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">
-                  <Github className="w-6 h-6" />
+                <a href="#features" className="block text-sm footer-link">
+                  Integrations
                 </a>
-                <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">
-                  <Linkedin className="w-6 h-6" />
+                <Link href="/login" className="block text-sm footer-link">
+                  API Docs
+                </Link>
+                <a href="#pricing" className="block text-sm footer-link">
+                  Pricing
                 </a>
               </div>
             </div>
-            
-            <div>
-              <h3 className="font-bold text-white mb-6">Platform</h3>
-              <ul className="space-y-4 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Neural Analysis</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Distributed Tracing</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Predictive Models</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">API Reference</a></li>
-              </ul>
+
+            {/* Solutions Links */}
+            <div className="space-y-4">
+              <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Solutions</h4>
+              <div className="space-y-2">
+                <a href="#features" className="block text-sm footer-link">
+                  Monitoring
+                </a>
+                <a href="#features" className="block text-sm footer-link">
+                  Incident Response
+                </a>
+                <a href="#features" className="block text-sm footer-link">
+                  Performance
+                </a>
+                <a href="#features" className="block text-sm footer-link">
+                  Security
+                </a>
+              </div>
             </div>
-            
-            <div>
-              <h3 className="font-bold text-white mb-6">Research</h3>
-              <ul className="space-y-4 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">ML Papers</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Case Studies</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Benchmarks</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Open Source</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-bold text-white mb-6">Enterprise</h3>
-              <ul className="space-y-4 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Compliance</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Support</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact Sales</a></li>
-              </ul>
+
+            {/* Company Links */}
+            <div className="space-y-4">
+              <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Company</h4>
+              <div className="space-y-2">
+                <a href="#about" className="block text-sm footer-link">
+                  About
+                </a>
+                <a href="#features" className="block text-sm footer-link">
+                  Blog
+                </a>
+                <a href="#about" className="block text-sm footer-link">
+                  Careers
+                </a>
+                <a href="#contact" className="block text-sm footer-link">
+                  Contact
+                </a>
+              </div>
+              <div className="flex gap-4 pt-2">
+                <a href="mailto:hello@traceonai.com" className="footer-social">
+                  <Mail className="w-5 h-5" />
+                </a>
+                <a href="https://github.com/traceonai" target="_blank" rel="noopener noreferrer" className="footer-social">
+                  <Github className="w-5 h-5" />
+                </a>
+                <a href="https://linkedin.com/company/traceonai" target="_blank" rel="noopener noreferrer" className="footer-social">
+                  <Linkedin className="w-5 h-5" />
+                </a>
+                <a href="https://youtube.com/@traceonai" target="_blank" rel="noopener noreferrer" className="footer-social">
+                  <Youtube className="w-5 h-5" />
+                </a>
+                <a href="https://traceonai.slack.com" target="_blank" rel="noopener noreferrer" className="footer-social">
+                  <Slack className="w-5 h-5" />
+                </a>
+              </div>
             </div>
           </div>
-          
-          <div className="border-t border-gray-800 mt-16 pt-8 flex flex-col md:flex-row items-center justify-between">
-            <p className="text-gray-500 font-mono text-sm">
-              © 2025 TraceonAI. Building the future of intelligent systems.
+
+          <div className="border-t pt-8 mt-8 flex flex-col md:flex-row justify-between items-center" style={{ borderColor: 'var(--border)' }}>
+            <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+              © 2025 TraceonAI. All rights reserved.
             </p>
-            <div className="flex space-x-8 text-gray-500 mt-4 md:mt-0">
-              <a href="#" className="hover:text-white transition-colors text-sm">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition-colors text-sm">Terms of Service</a>
-              <a href="#" className="hover:text-white transition-colors text-sm">Security</a>
+            <div className="flex gap-6 mt-4 md:mt-0">
+              <a href="#" className="text-sm footer-link-legal">
+                Privacy Policy
+              </a>
+              <a href="#" className="text-sm footer-link-legal">
+                Terms of Service
+              </a>
+              <a href="#" className="text-sm footer-link-legal">
+                Security
+              </a>
             </div>
           </div>
         </div>

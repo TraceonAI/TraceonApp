@@ -42,34 +42,33 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--bg-primary)' }}>
+      <div className="w-full max-w-md space-y-8">
         {/* Logo */}
         <div className="flex justify-center">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-xl">
+          <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-3 rounded-xl">
             <Brain className="w-8 h-8 text-white" />
           </div>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Sign in to Traceon AI
+        <h2 className="text-center text-3xl font-bold tracking-tight neon-text">
+          Sign in to TraceonAI
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-          Access your intelligent analysis platform
+        <p className="text-center text-sm" style={{ color: 'var(--text-secondary)' }}>
+          Access your AI SRE platform
         </p>
-      </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50 sm:rounded-lg sm:px-10 border border-gray-200 dark:border-gray-700">
+        <div className="card-primary py-8 px-6 sm:px-10">
           {/* Demo Credentials Banner */}
-          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/50 border border-blue-200 dark:border-blue-700 rounded-lg">
+          <div className="mb-6 p-4 glass-effect neon-border rounded-lg">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-blue-800 dark:text-blue-200">Demo Credentials</p>
-                <p className="text-xs text-blue-600 dark:text-blue-300">Use test/test for quick access</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--neon-blue)' }}>Demo Credentials</p>
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Use test/test for quick access</p>
               </div>
               <button
                 onClick={fillTestCredentials}
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium underline"
+                className="text-sm font-medium underline transition-colors duration-300"
+                style={{ color: 'var(--neon-blue)' }}
               >
                 Auto-fill
               </button>
@@ -78,15 +77,15 @@ export default function LoginPage() {
 
           {/* Error Message */}
           {error && (
-            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-700 rounded-md flex items-center">
-              <AlertCircle className="w-4 h-4 text-red-400 mr-2" />
-              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+            <div className="mb-4 p-3 glass-effect rounded-md flex items-center" style={{ borderColor: 'var(--neon-pink)', borderWidth: '1px' }}>
+              <AlertCircle className="w-4 h-4 mr-2" style={{ color: 'var(--neon-pink)' }} />
+              <p className="text-sm" style={{ color: 'var(--neon-pink)' }}>{error}</p>
             </div>
           )}
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="username" className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
                 Username
               </label>
               <input
@@ -96,13 +95,19 @@ export default function LoginPage() {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="appearance-none block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="appearance-none block w-full px-3 py-2 rounded-md focus:outline-none transition-all duration-300"
+                style={{ 
+                  backgroundColor: 'var(--bg-secondary)', 
+                  borderColor: 'var(--border-primary)', 
+                  borderWidth: '1px',
+                  color: 'var(--text-primary)'
+                }}
                 placeholder="Enter your username"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="password" className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
                 Password
               </label>
               <div className="relative">
@@ -113,7 +118,13 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-10"
+                  className="appearance-none block w-full px-3 py-2 rounded-md focus:outline-none transition-all duration-300 pr-10"
+                  style={{ 
+                    backgroundColor: 'var(--bg-secondary)', 
+                    borderColor: 'var(--border-primary)', 
+                    borderWidth: '1px',
+                    color: 'var(--text-primary)'
+                  }}
                   placeholder="Enter your password"
                 />
                 <button
@@ -122,9 +133,9 @@ export default function LoginPage() {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+                    <EyeOff className="h-4 w-4" style={{ color: 'var(--text-secondary)' }} />
                   ) : (
-                    <Eye className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+                    <Eye className="h-4 w-4" style={{ color: 'var(--text-secondary)' }} />
                   )}
                 </button>
               </div>
@@ -136,15 +147,16 @@ export default function LoginPage() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                  className="h-4 w-4 rounded"
+                  style={{ accentColor: 'var(--neon-purple)' }}
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                <label htmlFor="remember-me" className="ml-2 block text-sm" style={{ color: 'var(--text-secondary)' }}>
                   Remember me
                 </label>
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
+                <a href="#" className="font-medium transition-colors duration-300" style={{ color: 'var(--neon-blue)' }}>
                   Forgot password?
                 </a>
               </div>
@@ -154,7 +166,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="btn-primary w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -165,22 +177,22 @@ export default function LoginPage() {
           </form>
 
           {/* Links */}
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300 dark:border-gray-600" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                  New to Traceon AI?
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-6 text-center">
+          <div className="mt-8 pt-6 border-t text-center space-y-3" style={{ borderColor: 'var(--border-primary)' }}>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              Don't have an account?{' '}
+              <Link 
+                href="/signup" 
+                className="font-medium transition-colors duration-300"
+                style={{ color: 'var(--neon-blue)' }}
+              >
+                Create an account
+              </Link>
+            </p>
+            <div>
               <Link 
                 href="/landing" 
-                className="inline-flex items-center text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                className="inline-flex items-center text-sm transition-colors duration-300"
+                style={{ color: 'var(--text-secondary)' }}
               >
                 <ArrowLeft className="w-4 h-4 mr-1" />
                 Back to Landing Page
