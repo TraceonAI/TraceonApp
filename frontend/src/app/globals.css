@@ -383,13 +383,14 @@ body {
   justify-content: center;
   gap: 0.5rem;
   min-height: 44px;
-  margin: 0.5rem 0;
   white-space: nowrap;
   position: relative;
   overflow: hidden;
   box-shadow: 
     0 4px 14px 0 rgba(124, 58, 237, 0.3),
     0 0 0 1px rgba(255, 255, 255, 0.05);
+  text-decoration: none;
+  vertical-align: middle;
 }
 
 .btn-primary::before {
@@ -456,6 +457,9 @@ body {
   gap: 0.5rem;
   min-height: 44px;
   position: relative;
+  text-decoration: none;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .btn-secondary:hover {

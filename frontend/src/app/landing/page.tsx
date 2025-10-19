@@ -42,6 +42,9 @@ import {
 import LogoLoop from '@/components/LogoLoop';
 import ScrollStack, { ScrollStackItem } from '@/components/ScrollStack';
 import SpotlightCard from '@/components/SpotlightCard';
+import Particles from '@/components/Particles';
+import BlurText from '@/components/BlurText';
+import FadeContent from '@/components/FadeContent';
 import { 
   SiPostgresql, 
   SiMysql, 
@@ -73,33 +76,33 @@ import {
 const aiFeatures = [
   {
     icon: Brain,
-    title: "Predictive Intelligence",
-    description: "AI models trained on millions of incidents predict failures 4 hours before they occur, reducing MTTR by 85%."
+    title: "Intelligent Root Cause Analysis",
+    description: "AI agents automatically correlate data across logs, databases, and metrics to identify the root cause of incidents in seconds, not hours."
   },
   {
-    icon: Shield,
-    title: "Autonomous Remediation", 
-    description: "Self-healing systems automatically resolve 90% of incidents without human intervention using ML-driven playbooks."
+    icon: Network,
+    title: "Multi-Source Integration", 
+    description: "Seamlessly connects to your logging tools, databases, APMs, and communication channels to provide unified observability."
   },
   {
-    icon: Activity,
-    title: "Real-Time Observability",
-    description: "Comprehensive monitoring across all layers with intelligent correlation and root cause analysis in seconds."
+    icon: MessageCircle,
+    title: "Automated Team Communication",
+    description: "AI agents notify the right team members via Slack, email, or PagerDuty with context-rich incident reports and suggested fixes."
   },
   {
     icon: Target,
-    title: "SLO Management",
-    description: "Automated SLI tracking and error budget management with predictive alerting to prevent SLO violations."
+    title: "Proactive Issue Detection",
+    description: "Continuously monitors all connected systems to detect anomalies and potential issues before they impact users."
   },
   {
-    icon: Gauge,
-    title: "Performance Optimization",
-    description: "Continuous performance tuning using AI to optimize resource allocation and eliminate bottlenecks."
+    icon: Code,
+    title: "Solution Recommendation Engine",
+    description: "Leverages historical data and ML models to suggest proven solutions and remediation steps for detected issues."
   },
   {
-    icon: Lock,
-    title: "Security Integration",
-    description: "Built-in security monitoring with threat detection and automated compliance reporting for SOC 2 & ISO 27001."
+    icon: Activity,
+    title: "End-to-End Automation",
+    description: "From detection to resolution to notification - AI agents handle the entire incident lifecycle autonomously."
   }
 ];
 
@@ -213,32 +216,28 @@ export default function LandingPage() {
         }}></div>
       </div>
 
-      {/* Floating Neon Orbs */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="neon-glow absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-30"></div>
-        <div className="neon-glow absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-20" style={{ animationDelay: '2s' }}></div>
-      </div>
-
       {/* Navigation */}
-      <nav className="relative z-50 glass-effect border-b" style={{ borderColor: 'var(--border-primary)' }}>
-        <div className="w-full px-4 lg:px-8 xl:px-12">
-          <div className="flex justify-between items-center h-20 py-4">
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b" style={{ 
+        backgroundColor: 'rgba(10, 10, 10, 0.8)',
+        borderColor: 'rgba(124, 58, 237, 0.2)'
+      }}>
+        <div className="w-full px-6 lg:px-12 xl:px-16">
+          <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex items-center space-x-3">
+            <Link href="/" className="flex items-center space-x-2 group">
               <div className="relative">
-                <Hexagon className="w-8 h-8 neon-text" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Brain className="w-4 h-4" style={{ color: 'var(--bg-primary)' }} />
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110" style={{ 
+                  backgroundColor: 'var(--neon-purple)',
+                  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+                }}>
+                  <Brain className="w-5 h-5" style={{ color: 'var(--bg-primary)' }} />
                 </div>
               </div>
-              <div className="flex flex-col">
-                <span className="text-lg font-bold neon-text">TraceonAI</span>
-                <span className="text-xs font-mono" style={{ color: 'var(--neon-blue)' }}>AI SRE Platform</span>
-              </div>
-            </div>
+              <span className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>TraceonAI</span>
+            </Link>
             
             {/* Center Menu */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center space-x-1">
               {[
                 { name: 'Features', href: '#features' },
                 { name: 'Pricing', href: '#pricing' },
@@ -248,22 +247,33 @@ export default function LandingPage() {
                 <a 
                   key={item.name}
                   href={item.href}
-                  className="text-sm font-medium transition-all duration-300 relative group"
+                  className="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 hover:bg-white/5"
                   style={{ color: 'var(--text-secondary)' }}
                 >
                   {item.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-blue-500 group-hover:w-full transition-all duration-300"></span>
                 </a>
               ))}
             </div>
             
             {/* Actions */}
-            <div className="flex items-center space-x-4">
-              <Link href="/login" className="btn-secondary">
+            <div className="flex items-center space-x-3">
+              <Link 
+                href="/login" 
+                className="hidden sm:flex px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 hover:bg-white/5"
+                style={{ color: 'var(--text-primary)' }}
+              >
                 Sign In
               </Link>
-              <Link href="/signup" className="btn-primary">
-                Start Free Trial
+              <Link 
+                href="/signup" 
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300"
+                style={{ 
+                  backgroundColor: 'var(--neon-purple)',
+                  color: 'var(--bg-primary)',
+                  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+                }}
+              >
+                Get Started
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -271,8 +281,26 @@ export default function LandingPage() {
         </div>
       </nav>
 
+      {/* Spacer for fixed nav */}
+      <div className="h-16"></div>
+
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Particles Background */}
+        <div className="absolute inset-0 z-0">
+          <Particles
+            particleColors={['#FFFFFF']}
+            particleCount={500}
+            particleSpread={20}
+            speed={0.05}
+            particleBaseSize={200}
+            moveParticlesOnHover={false}
+            alphaParticles={true}
+            disableRotation={false}
+            particleHoverFactor={0.3}
+          />
+        </div>
+        
         <div className="w-full px-6 lg:px-12 xl:px-16 text-center relative z-10">
           <div className="space-y-16">
             {/* Hero Content */}
@@ -280,28 +308,30 @@ export default function LandingPage() {
               <div className="inline-flex items-center px-4 py-2 rounded-full glass-effect neon-border mb-8">
                 <Zap className="w-4 h-4 mr-2" style={{ color: 'var(--neon-blue)' }} />
                 <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-                  Now with AI-powered autonomous healing
+                  Agentic AI for Autonomous Site Reliability
                 </span>
               </div>
               
-              <h1 className="text-6xl lg:text-7xl font-bold leading-tight">
-                <span className="neon-text">Developer infrastructure</span>
-                <br />
-                <span style={{ color: 'var(--text-primary)' }}>built for your </span>
-                <span className="neon-text">team</span>
-              </h1>
+              <BlurText
+                text="Your AI SRE Team That Never Sleeps"
+                delay={50}
+                animateBy="words"
+                direction="top"
+                className="text-6xl lg:text-7xl font-bold leading-tight neon-text"
+                style={{ margin: 'auto', justifyContent: 'center' }}
+              />
               
               <p className="text-xl max-w-4xl mx-auto leading-relaxed" style={{margin:'auto', color: 'var(--text-secondary)' }}>
-                TraceonAI works seamlessly with the technologies you already use. 
-                Predictive AI that prevents outages before they happen, with autonomous 
-                remediation that maintains 99.99% uptime.
+                Connect all your logging tools, databases, and communication channels. 
+                Our AI agents automatically detect issues, perform root cause analysis, identify solutions, 
+                and notify your team - all without human intervention.
               </p>
             </div>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
-              <Link href="/signup" className="btn-primary text-lg px-8 py-4">
-                Start free trial
+              <Link href="/signup" className="btn-primary text-lg px-8 py-4 inline-flex items-center gap-2">
+                <span>Start free trial</span>
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link href="/login" className="btn-secondary text-lg px-8 py-4">
@@ -312,14 +342,14 @@ export default function LandingPage() {
             {/* Trust Indicators */}
             <div className="pt-16 space-y-6">
               <p className="text-sm font-medium uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-                Built for the world's fastest engineering teams, now available for everyone
+                Trusted by engineering teams to automate incident response
               </p>
               <div className="flex items-center justify-center gap-12 opacity-60">
-                <div className="text-2xl">🚀</div>
+                <div className="text-2xl">🤖</div>
+                <div className="text-2xl">🔍</div>
                 <div className="text-2xl">⚡</div>
-                <div className="text-2xl">🛡️</div>
+                <div className="text-2xl">🔔</div>
                 <div className="text-2xl">🎯</div>
-                <div className="text-2xl">🔥</div>
               </div>
             </div>
           </div>
@@ -328,22 +358,42 @@ export default function LandingPage() {
 
       {/* Feature Showcase - Graphite Style */}
       <section className="min-h-screen flex items-center justify-center relative py-20">
-        <div className="w-full px-6 lg:px-12 xl:px-16">
+        {/* Particles Background */}
+        <div className="absolute inset-0 z-0">
+          <Particles
+            particleColors={['#FFFFFF']}
+            particleCount={500}
+            particleSpread={20}
+            speed={0.05}
+            particleBaseSize={200}
+            moveParticlesOnHover={false}
+            alphaParticles={true}
+            disableRotation={false}
+            particleHoverFactor={0.3}
+          />
+        </div>
+        
+        <FadeContent blur={true} duration={1000} delay={200} className="w-full px-6 lg:px-12 xl:px-16 relative z-10">
           <div className="text-center mb-28">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-8">
-              <span style={{ color: 'var(--text-primary)' }}>Where change happens</span>
-            </h2>
+            <BlurText
+              text="How AI Agents Work For You"
+              delay={80}
+              animateBy="words"
+              direction="top"
+              className="text-4xl lg:text-5xl font-bold mb-8"
+              style={{ color: 'var(--text-primary)', margin: 'auto', justifyContent: 'center' }}
+            />
             <p  className="text-xl max-w-3xl mx-auto leading-relaxed" style={{margin:'auto', color: 'var(--text-secondary)' }}>
-              Organizations that adopt TraceonAI ship more code with smaller incidents 
-              and faster recovery cycles.
+              Our AI agents continuously monitor all your connected systems, correlate data across sources, 
+              and autonomously handle incidents from detection to resolution.
             </p>
           </div>
 
           {/* 3D Feature Cards */}
-          <div className="relative max-w-6xl mx-auto">
-            <div className="space-y-12">
+          <div className="relative w-full">
+            <div className="space-y-12 w-full">
               {/* AI Intelligence Card */}
-              <div style={{margin:'auto'}} className="glass-effect neon-border p-10 rounded-2xl transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
+              <div className="glass-effect neon-border p-10 rounded-2xl transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
                 <div className="grid lg:grid-cols-2 gap-10 items-center">
                   <div>
                     <div className="flex items-center gap-4 mb-6">
@@ -351,62 +401,70 @@ export default function LandingPage() {
                         <Brain className="w-6 h-6" style={{ color: 'var(--neon-purple)' }} />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-bold neon-text">Predictive Intelligence</h3>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>AI models predict failures before they occur</p>
+                        <h3 className="text-2xl font-bold neon-text">Multi-Source Correlation</h3>
+                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>AI agents analyze data across all connected systems</p>
                       </div>
                     </div>
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <span style={{ color: 'var(--text-secondary)' }}>MTTR Reduction</span>
-                        <span className="neon-text font-bold text-xl">85%</span>
+                        <span style={{ color: 'var(--text-secondary)' }}>Data Sources Connected</span>
+                        <span className="neon-text font-bold text-xl">15+</span>
                       </div>
                       <div className="w-full bg-gray-800 rounded-full h-3">
-                        <div className="bg-gradient-to-r from-purple-500 to-blue-500 h-3 rounded-full shadow-lg" style={{ width: '85%' }}></div>
+                        <div className="bg-gradient-to-r from-purple-500 to-blue-500 h-3 rounded-full shadow-lg" style={{ width: '100%' }}></div>
                       </div>
                     </div>
                   </div>
                   <div className="glass-effect rounded-xl p-6 bg-gradient-to-br from-purple-900/20 to-blue-900/20">
                     <pre className="text-sm font-mono text-green-400">
-{`> AI Analysis Complete
-  Anomaly detected: CPU spike pattern
-  Prediction: Service failure in 3.2 hours
-  Auto-scaling: +3 instances
-  Status: ✅ Incident prevented`}
+{`> AI Agent: Correlating data sources
+  ✓ Datadog: High error rate detected
+  ✓ PostgreSQL: Connection pool saturated
+  ✓ Slack: No recent deployments
+  
+  Root Cause: Database connection leak
+  Impact: 3,500 affected users
+  Status: ✅ Solution identified`}
                     </pre>
                   </div>
                 </div>
               </div>
 
-              {/* Autonomous Healing Card */}
+              {/* Autonomous Response Card */}
               <div className="glass-effect neon-border p-10 rounded-2xl transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
                 <div className="grid lg:grid-cols-2 gap-10 items-center">
                   <div className="glass-effect rounded-xl p-6 bg-gradient-to-br from-green-900/20 to-teal-900/20 lg:order-2">
                     <pre className="text-sm font-mono text-blue-400">
-{`> Incident Detected
-  Service: payment-api
-  Error Rate: 15% → Auto-healing initiated
-  Rollback: Deployed v2.1.3
-  Recovery Time: 47 seconds
-  Status: ✅ Service restored`}
+{`> AI Agent: Incident Resolution
+  Issue: Payment API degradation
+  Analysis: Memory leak in v2.3.1
+  
+  Actions Taken:
+  ✓ Notified @platform-team via Slack
+  ✓ Rolled back to stable v2.2.8
+  ✓ Created Jira ticket with RCA
+  ✓ Updated status page
+  
+  Resolution Time: 42 seconds`}
                     </pre>
                   </div>
                   <div>
                     <div className="flex items-center gap-4 mb-6">
                       <div className="w-12 h-12 rounded-xl glass-effect flex items-center justify-center">
-                        <Shield className="w-6 h-6" style={{ color: 'var(--neon-green)' }} />
+                        <MessageCircle className="w-6 h-6" style={{ color: 'var(--neon-green)' }} />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-bold neon-text">Autonomous Remediation</h3>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Self-healing systems resolve incidents automatically</p>
+                        <h3 className="text-2xl font-bold neon-text">Automated Team Notification</h3>
+                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>AI agents inform the right people at the right time</p>
                       </div>
                     </div>
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <span style={{ color: 'var(--text-secondary)' }}>Incidents Auto-Resolved</span>
-                        <span className="neon-text font-bold text-xl">90%</span>
+                        <span style={{ color: 'var(--text-secondary)' }}>Auto-Resolved & Notified</span>
+                        <span className="neon-text font-bold text-xl">94%</span>
                       </div>
                       <div className="w-full bg-gray-800 rounded-full h-3">
-                        <div className="bg-gradient-to-r from-green-500 to-teal-500 h-3 rounded-full shadow-lg" style={{ width: '90%' }}></div>
+                        <div className="bg-gradient-to-r from-green-500 to-teal-500 h-3 rounded-full shadow-lg" style={{ width: '94%' }}></div>
                       </div>
                     </div>
                   </div>
@@ -414,87 +472,165 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </div>
+        </FadeContent>
       </section>
 
 
 
       {/* AI Assistant Section */}
-      <section className="py-40" style={{ backgroundColor: 'var(--background-primary)' }}>
-        <div className="w-full px-4 lg:px-8 xl:px-12">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Large Media Card */}
-            <div className="card-primary p-8 background-glow corner-plus">
-              <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--teal)' }}>
-                    <Brain className="w-6 h-6" style={{ color: 'var(--background-primary)' }} />
+      <section className="py-40" style={{ backgroundColor: 'var(--bg-primary)' }}>
+        <FadeContent blur={true} duration={1000} delay={200} className="w-full px-6 lg:px-12 xl:px-16">
+          <div className="grid lg:grid-cols-2 gap-16 items-center w-full">
+            {/* Large Media Card - Enhanced */}
+            <div className="glass-effect neon-border p-10 rounded-2xl relative overflow-hidden group">
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <div className="space-y-8 relative z-10">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-xl glass-effect flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style={{ 
+                    backgroundColor: 'var(--neon-purple)',
+                    boxShadow: '0 0 20px rgba(139, 92, 246, 0.4)'
+                  }}>
+                    <Brain className="w-7 h-7" style={{ color: 'var(--bg-primary)' }} />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>AI SRE Assistant</h3>
-                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Your intelligent reliability partner</p>
+                    <h3 className="text-2xl font-bold neon-text">AI Agent in Action</h3>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Real-time incident detection and response</p>
                   </div>
                 </div>
                 
-                <div className="h-64 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--background-secondary)' }}>
-                  <div className="text-center space-y-4">
-                    <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center animate-pulse-custom" style={{ backgroundColor: 'var(--teal)' }}>
-                      <Activity className="w-8 h-8" style={{ color: 'var(--background-primary)' }} />
+                <div className="glass-effect rounded-xl p-8 bg-gradient-to-br from-purple-900/20 to-blue-900/20" style={{ minHeight: '280px' }}>
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-center mb-6">
+                      <div className="w-20 h-20 rounded-full flex items-center justify-center relative" style={{ 
+                        backgroundColor: 'var(--neon-purple)',
+                        boxShadow: '0 0 30px rgba(139, 92, 246, 0.5)'
+                      }}>
+                        <Activity className="w-10 h-10 animate-pulse" style={{ color: 'var(--bg-primary)' }} />
+                        <div className="absolute inset-0 rounded-full animate-ping" style={{ 
+                          backgroundColor: 'var(--neon-purple)',
+                          opacity: 0.3
+                        }}></div>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <p className="font-mono text-sm" style={{ color: 'var(--teal)' }}>$ traceon analyze --incident=prod-db-spike</p>
-                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Analyzing incident patterns...</p>
-                      <p className="text-sm" style={{ color: 'var(--green)' }}>✅ Root cause identified: Memory leak in user service</p>
-                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Suggested fix: Implement connection pooling</p>
+                    <div className="space-y-3 font-mono text-sm">
+                      <div className="flex items-start gap-2">
+                        <span style={{ color: 'var(--neon-green)' }}>$</span>
+                        <p style={{ color: 'var(--neon-blue)' }}>agent analyze --incident=high-latency-spike</p>
+                      </div>
+                      <p className="pl-4" style={{ color: 'var(--text-secondary)' }}>Querying Datadog, PostgreSQL, Slack...</p>
+                      <div className="pl-4 flex items-start gap-2">
+                        <span style={{ color: 'var(--neon-green)' }}>✓</span>
+                        <p style={{ color: 'var(--neon-green)' }}>Root cause: Database query N+1 in OrderService</p>
+                      </div>
+                      <p className="pl-4" style={{ color: 'var(--neon-blue)' }}>Solution: Add eager loading to reduce queries</p>
+                      <p className="pl-4" style={{ color: 'var(--neon-orange)' }}>Notified: @backend-team via Slack with fix PR</p>
+                      <div className="mt-4 pt-4 border-t" style={{ borderColor: 'var(--border-primary)' }}>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Total analysis time</span>
+                          <span className="text-xs font-bold" style={{ color: 'var(--neon-green)' }}>8.2s</span>
+                        </div>
+                        <div className="w-full bg-gray-800 rounded-full h-2 mt-2">
+                          <div className="bg-gradient-to-r from-green-500 to-teal-500 h-2 rounded-full" style={{ width: '100%' }}></div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Vertical Benefits List */}
-            <div className="space-y-6">
-              <div className="accent-line">
-                <h2 className="text-section mb-4">Intelligent Operations</h2>
-                <p className="text-body">
-                  Our AI assistant continuously learns from your infrastructure patterns to provide
-                  proactive insights and automated remediation strategies.
+            {/* Vertical Benefits List - Enhanced */}
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-effect neon-border">
+                  <Network className="w-4 h-4" style={{ color: 'var(--neon-purple)' }} />
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Agentic AI Platform</span>
+                </div>
+                <h2 className="text-4xl lg:text-5xl font-bold neon-text leading-tight">
+                  Connect Everything, Automate Everything
+                </h2>
+                <p className="text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  Our AI agents integrate with all your tools to create a unified intelligence layer 
+                  that detects, analyzes, and resolves issues automatically while keeping your team informed.
                 </p>
               </div>
               
               <div className="space-y-4">
                 {[
-                  { icon: Target, title: "Predictive Analysis", desc: "Forecast issues 4-6 hours before they impact users" },
-                  { icon: Zap, title: "Auto-Remediation", desc: "Resolve 90% of incidents without human intervention" },
-                  { icon: BarChart3, title: "Performance Insights", desc: "Continuous optimization recommendations" },
-                  { icon: CheckCircle, title: "SLO Management", desc: "Automated tracking and error budget alerts" }
+                  { 
+                    icon: Database, 
+                    title: "Universal Integration", 
+                    desc: "Connect logging tools, databases, APMs, and communication channels in minutes",
+                    color: 'var(--neon-purple)'
+                  },
+                  { 
+                    icon: Brain, 
+                    title: "Root Cause Analysis", 
+                    desc: "AI agents correlate data across sources to pinpoint root causes instantly",
+                    color: 'var(--neon-blue)'
+                  },
+                  { 
+                    icon: Code, 
+                    title: "Solution Recommendations", 
+                    desc: "Get proven fixes and remediation steps based on historical data",
+                    color: 'var(--neon-green)'
+                  },
+                  { 
+                    icon: Bell, 
+                    title: "Smart Notifications", 
+                    desc: "Automatically alert the right team members with context-rich updates",
+                    color: 'var(--neon-orange)'
+                  }
                 ].map((benefit, index) => (
-                  <div key={index} className="flex gap-4 p-4 rounded-lg transition-colors duration-300 hover:bg-gray-800/50">
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--background-card)' }}>
-                      <benefit.icon className="w-5 h-5" style={{ color: 'var(--teal)' }} />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>{benefit.title}</h4>
-                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{benefit.desc}</p>
+                  <div 
+                    key={index} 
+                    className="glass-effect neon-border p-6 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl group cursor-pointer"
+                  >
+                    <div className="flex gap-4 items-start">
+                      <div 
+                        className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300" 
+                        style={{ 
+                          backgroundColor: benefit.color,
+                          boxShadow: `0 0 20px ${benefit.color}40`
+                        }}
+                      >
+                        <benefit.icon className="w-6 h-6" style={{ color: 'var(--bg-primary)' }} />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-bold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>{benefit.title}</h4>
+                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{benefit.desc}</p>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-        </div>
+        </FadeContent>
       </section>
 
       {/* Feature Demonstration with ScrollStack */}
       <section className="py-20" style={{ backgroundColor: 'var(--bg-primary)' }}>
-        <div className="w-full px-4 lg:px-8 xl:px-12">
-          <div className="text-center mb-12">
-            <h2 className="text-section mb-4 text-reveal">Intelligent SRE Platform</h2>
-            <p style={{margin:'auto'}} className="text-body max-w-4xl mx-auto scroll-fade-in">
-              Experience our AI-powered capabilities through interactive demonstrations
-            </p>
+        <FadeContent blur={true} duration={1000} delay={200}>
+          <div className="w-full px-4 lg:px-8 xl:px-12">
+            <div className="text-center mb-12 relative z-10" style={{ backgroundColor: 'var(--bg-primary)', padding: '2rem 0' }}>
+              {/* <h2 className="text-section mb-4 text-reveal">Intelligent SRE Platform</h2> */}
+                          <BlurText
+              text="Intelligent SRE Platform"
+              delay={80}
+              animateBy="words"
+              direction="top"
+              className="text-5xl lg:text-6xl font-bold mb-8 neon-text"
+              style={{ margin: 'auto', justifyContent: 'center' }}
+            />
+              <p style={{margin:'auto'}} className="text-body max-w-4xl mx-auto scroll-fade-in">
+                Experience our AI-powered capabilities through interactive demonstrations
+              </p>
+            </div>
           </div>
-        </div>
+        </FadeContent>
         
         <ScrollStack
           className="scroll-stack-wrapper"
@@ -506,28 +642,28 @@ export default function LandingPage() {
           baseScale={0.88}
           useWindowScroll={false}
         >
-          {/* Card 1: Intelligent Operations */}
+          {/* Card 1: Multi-Source Data Correlation */}
           <ScrollStackItem itemClassName="card-primary">
             <div className="space-y-6">
               <div className="accent-line">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-                    <Brain className="w-6 h-6" style={{ color: 'var(--neon-blue)' }} />
+                    <Network className="w-6 h-6" style={{ color: 'var(--neon-blue)' }} />
                   </div>
-                  <h2 className="text-3xl font-bold neon-text">Intelligent Operations</h2>
+                  <h3 className="text-3xl font-bold neon-text">Multi-Source Data Correlation</h3>
                 </div>
                 <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-                  Our AI assistant continuously learns from your infrastructure patterns to provide
-                  proactive insights and automated remediation strategies.
+                  AI agents continuously analyze data from Datadog, Splunk, PostgreSQL, MongoDB, and more 
+                  to identify patterns and anomalies across your entire infrastructure in real-time.
                 </p>
               </div>
               
               <div className="grid md:grid-cols-2 gap-4 mt-6">
                 {[
-                  { icon: Target, title: "Predictive Analysis", desc: "Forecast issues 4-6 hours before they impact users" },
-                  { icon: Zap, title: "Auto-Remediation", desc: "Resolve 90% of incidents without human intervention" },
-                  { icon: BarChart3, title: "Performance Insights", desc: "Continuous optimization recommendations" },
-                  { icon: CheckCircle, title: "SLO Management", desc: "Automated tracking and error budget alerts" }
+                  { icon: Database, title: "15+ Integrations", desc: "Connect all your logging tools and databases seamlessly" },
+                  { icon: Network, title: "Cross-Platform Analysis", desc: "Correlate metrics across disparate systems instantly" },
+                  { icon: BarChart3, title: "Anomaly Detection", desc: "Identify unusual patterns before they become incidents" },
+                  { icon: CheckCircle, title: "Unified Dashboard", desc: "Single pane of glass for all your data sources" }
                 ].map((benefit, index) => (
                   <div key={index} className="flex gap-3 p-4 rounded-lg glass-effect">
                     <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--bg-secondary)' }}>
@@ -543,55 +679,55 @@ export default function LandingPage() {
             </div>
           </ScrollStackItem>
 
-          {/* Card 2: Real-Time Monitoring */}
+          {/* Card 2: Intelligent Root Cause Analysis */}
           <ScrollStackItem itemClassName="card-primary">
             <div className="space-y-6">
               <div className="accent-line">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-                    <Activity className="w-6 h-6" style={{ color: 'var(--neon-purple)' }} />
+                    <Brain className="w-6 h-6" style={{ color: 'var(--neon-purple)' }} />
                   </div>
-                  <h2 className="text-3xl font-bold neon-text">Real-Time Monitoring</h2>
+                  <h3 className="text-3xl font-bold neon-text">Intelligent Root Cause Analysis</h3>
                 </div>
                 <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-                  Comprehensive observability across your entire stack with intelligent alerting 
-                  that reduces noise by 95% and focuses on what matters.
+                  Advanced machine learning algorithms trace issues across microservices, databases, 
+                  and logs to pinpoint exact causes in seconds, not hours.
                 </p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6 mt-6">
                 <div className="space-y-4">
                   <div className="icon-pill">
-                    <Activity className="icon" />
-                    <span>Live Infrastructure Metrics</span>
+                    <Target className="icon" />
+                    <span>Trace Dependencies Across Services</span>
                   </div>
                   <div className="icon-pill">
-                    <BarChart3 className="icon" />
-                    <span>Application Performance Monitoring</span>
+                    <Code className="icon" />
+                    <span>Code-Level Error Detection</span>
                   </div>
                   <div className="icon-pill">
-                    <Bell className="icon" />
-                    <span>Smart Alert Correlation</span>
+                    <Zap className="icon" />
+                    <span>8.2s Average Analysis Time</span>
                   </div>
                 </div>
 
                 <div className="glass-effect p-4 rounded-lg">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>System Health</h4>
+                      <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Recent Analysis</h4>
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--neon-green)' }}></div>
-                        <span className="text-sm font-mono" style={{ color: 'var(--neon-green)' }}>HEALTHY</span>
+                        <span className="text-sm font-mono" style={{ color: 'var(--neon-green)' }}>RESOLVED</span>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-                        <div className="text-2xl font-bold" style={{ color: 'var(--neon-green)' }}>99.97%</div>
-                        <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>Uptime</div>
+                        <div className="text-2xl font-bold" style={{ color: 'var(--neon-green)' }}>12</div>
+                        <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>Sources Analyzed</div>
                       </div>
                       <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-                        <div className="text-2xl font-bold" style={{ color: 'var(--neon-blue)' }}>1.2ms</div>
-                        <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>Response</div>
+                        <div className="text-2xl font-bold" style={{ color: 'var(--neon-blue)' }}>100%</div>
+                        <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>Confidence</div>
                       </div>
                     </div>
                   </div>
@@ -600,19 +736,19 @@ export default function LandingPage() {
             </div>
           </ScrollStackItem>
 
-          {/* Card 3: Autonomous Response */}
+          {/* Card 3: Automated Team Notifications */}
           <ScrollStackItem itemClassName="card-primary">
             <div className="space-y-6">
               <div className="accent-line">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-                    <Shield className="w-6 h-6" style={{ color: 'var(--neon-green)' }} />
+                    <MessageCircle className="w-6 h-6" style={{ color: 'var(--neon-green)' }} />
                   </div>
-                  <h2 className="text-3xl font-bold neon-text">Autonomous Response</h2>
+                  <h3 className="text-3xl font-bold neon-text">Automated Team Notifications</h3>
                 </div>
                 <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-                  AI-driven incident response that learns from every outage to build 
-                  smarter remediation strategies and prevent future occurrences.
+                  Instantly notify the right teams via Slack, PagerDuty, or email with context-rich alerts, 
+                  recommended fixes, and auto-generated Jira tickets for seamless incident management.
                 </p>
               </div>
 
@@ -620,22 +756,28 @@ export default function LandingPage() {
                 <div className="glass-effect p-4 rounded-lg">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Incident Timeline</h4>
-                      <div className="text-xs font-mono" style={{ color: 'var(--neon-green)' }}>Auto-resolved in 47s</div>
+                      <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Notification Timeline</h4>
+                      <div className="text-xs font-mono" style={{ color: 'var(--neon-green)' }}>Delivered in 2.3s</div>
                     </div>
                     {[
-                      { time: '14:32:15', event: 'Anomaly detected in payment service', status: 'detected' },
-                      { time: '14:32:22', event: 'AI analysis: Memory leak identified', status: 'analyzing' },
-                      { time: '14:32:35', event: 'Auto-restart initiated', status: 'resolving' },
-                      { time: '14:33:02', event: 'Service healthy, monitoring', status: 'resolved' }
+                      { time: '14:32:08', event: 'Issue detected: Database latency spike', status: 'detected', channel: 'System' },
+                      { time: '14:32:10', event: 'Root cause analyzed: N+1 query problem', status: 'analyzing', channel: 'AI Agent' },
+                      { time: '14:32:11', event: 'Slack message sent to @backend-team', status: 'notifying', channel: 'Slack' },
+                      { time: '14:32:11', event: 'Jira ticket auto-created with fix PR', status: 'resolved', channel: 'Jira' }
                     ].map((item, index) => (
                       <div key={index} className="flex gap-3">
                         <div className="flex-shrink-0 w-2 h-2 rounded-full mt-2" style={{ 
                           backgroundColor: item.status === 'resolved' ? 'var(--neon-green)' : 
-                                         item.status === 'resolving' ? 'var(--neon-orange)' : 'var(--neon-blue)' 
+                                         item.status === 'notifying' ? 'var(--neon-orange)' : 'var(--neon-blue)' 
                         }}></div>
-                        <div>
-                          <div className="text-xs font-mono" style={{ color: 'var(--text-tertiary)' }}>{item.time}</div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            <div className="text-xs font-mono" style={{ color: 'var(--text-tertiary)' }}>{item.time}</div>
+                            <div className="text-xs px-2 py-0.5 rounded" style={{ 
+                              backgroundColor: 'var(--bg-secondary)',
+                              color: 'var(--neon-blue)'
+                            }}>{item.channel}</div>
+                          </div>
                           <div className="text-sm" style={{ color: 'var(--text-primary)' }}>{item.event}</div>
                         </div>
                       </div>
@@ -645,16 +787,16 @@ export default function LandingPage() {
 
                 <div className="space-y-4">
                   <div className="icon-pill">
-                    <AlertTriangle className="icon" />
-                    <span>Intelligent Anomaly Detection</span>
+                    <Bell className="icon" />
+                    <span>Smart Channel Routing</span>
                   </div>
                   <div className="icon-pill">
-                    <Shield className="icon" />
-                    <span>Automated Remediation</span>
+                    <MessageCircle className="icon" />
+                    <span>Context-Rich Alerts</span>
                   </div>
                   <div className="icon-pill">
                     <CheckCircle className="icon" />
-                    <span>Self-Healing Infrastructure</span>
+                    <span>Auto-Create Tickets & PRs</span>
                   </div>
                 </div>
               </div>
@@ -665,9 +807,16 @@ export default function LandingPage() {
 
       {/* Feature Grid */}
       <section className="min-h-screen flex items-center justify-center scroll-fade-in py-20" style={{ backgroundColor: 'var(--background-primary)' }}>
-        <div className="w-full px-4 lg:px-8 xl:px-12">
+        <FadeContent blur={true} duration={1000} delay={200} className="w-full px-4 lg:px-8 xl:px-12">
           <div className="text-center mb-16">
-            <h2 className="text-section mb-4 text-reveal">Complete SRE Platform</h2>
+            <BlurText
+              text="Complete SRE Platform"
+              delay={80}
+              animateBy="words"
+              direction="top"
+              className="text-5xl lg:text-6xl font-bold mb-8 neon-text"
+              style={{ margin: 'auto', justifyContent: 'center' }}
+            />
             <p className="text-body max-w-4xl mx-auto scroll-fade-in" style={{margin:'auto'}}>
               Everything you need to build, deploy, and maintain reliable systems at scale.
             </p>
@@ -693,25 +842,33 @@ export default function LandingPage() {
               </SpotlightCard>
             ))}
           </div>
-        </div>
+        </FadeContent>
       </section>
 
-      {/* Developer Infrastructure Section */}
-      <section className="min-h-screen flex items-center justify-center scroll-fade-in py-20" style={{ backgroundColor: 'var(--background-secondary)' }}>
-        <div className="w-full px-4 lg:px-8 xl:px-12">
-          <div className="text-center mb-16">
-            <h2 className="text-section mb-4 text-reveal">Seamless Integrations</h2>
+      {/* Integrations Section */}
+      <section id="integrations" className="min-h-screen flex items-center justify-center scroll-fade-in py-20" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+        <FadeContent blur={true} duration={1000} delay={200} className="w-full px-4 lg:px-8 xl:px-12">
+          <div className="text-center mb-16 relative z-10" style={{ backgroundColor: 'var(--bg-secondary)', padding: '2rem 0' }}>
+            <BlurText
+              text="Connect All Your Tools"
+              delay={80}
+              animateBy="words"
+              direction="top"
+              className="text-5xl lg:text-6xl font-bold mb-8 neon-text"
+              style={{ margin: 'auto', justifyContent: 'center' }}
+            />
             <p style={{margin:'auto'}} className="text-body max-w-4xl mx-auto scroll-fade-in mb-8">
-              Connect with your existing tools and workflows. TraceonAI integrates with 
-              100+ platforms to provide unified visibility across your entire stack.
+              Our AI agents connect with 15+ logging tools, databases, and communication platforms
+              to create a unified intelligence layer. Monitor everything from Datadog metrics to PostgreSQL 
+              queries to Slack conversations—all in one place.
             </p>
             <p className="text-sm scroll-fade-in" style={{ color: 'var(--text-secondary)' }}>
-              Our AI SRE seamlessly integrates with your entire technology ecosystem
+              Seamless integration with your entire observability and incident management ecosystem
             </p>
           </div>
           
           {/* Logo Loop Integration Showcase */}
-          <div className="mb-16" style={{ height: '120px', position: 'relative', overflow: 'hidden' }}>
+          <div className="mb-16" style={{ height: '120px', position: 'relative', overflow: 'hidden', backgroundColor: 'var(--bg-secondary)' }}>
             <LogoLoop
               logos={integrationLogos}
               speed={40}
@@ -721,7 +878,7 @@ export default function LandingPage() {
               pauseOnHover
               scaleOnHover
               fadeOut
-              fadeOutColor="#111111"
+              fadeOutColor="rgba(17, 17, 17, 1)"
               ariaLabel="Integration partners and tools"
             />
           </div>
@@ -743,23 +900,28 @@ export default function LandingPage() {
           </div>
           
           <div className="text-center mt-12">
-            <button className="btn-secondary">
-              View All Integrations
-              <ArrowRight className="w-4 h-4 ml-2" />
+            <button className="btn-secondary inline-flex items-center gap-2">
+              <span>View All Integrations</span>
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
-        </div>
+        </FadeContent>
       </section>
 
 
 
       {/* Features Section */}
       <section id="features" className="min-h-screen flex items-center justify-center relative py-20" style={{ backgroundColor: 'var(--background-secondary)' }}>
-        <div className="w-full px-6 lg:px-12 xl:px-16">
+        <FadeContent blur={true} duration={1000} delay={200} className="w-full px-6 lg:px-12 xl:px-16">
           <div className="text-center mb-20">
-            <h2 className="text-5xl lg:text-6xl font-bold mb-8">
-              <span className="neon-text">Powerful Features</span>
-            </h2>
+            <BlurText
+              text="Powerful Features"
+              delay={80}
+              animateBy="words"
+              direction="top"
+              className="text-5xl lg:text-6xl font-bold mb-8 neon-text"
+              style={{ margin: 'auto', justifyContent: 'center' }}
+            />
             <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{margin:'auto', color: 'var(--text-secondary)' }}>
               Everything you need to build, deploy, and maintain reliable systems at scale with AI-powered automation.
             </p>
@@ -778,16 +940,36 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-        </div>
+        </FadeContent>
       </section>
 
       {/* Pricing Section */}
       <section id="pricing" className="min-h-screen flex items-center justify-center relative py-20" style={{ backgroundColor: 'var(--background-primary)' }}>
-        <div className="w-full px-6 lg:px-12 xl:px-16">
+        {/* Particles Background */}
+        <div className="absolute inset-0 z-0">
+          <Particles
+            particleColors={['#FFFFFF']}
+            particleCount={500}
+            particleSpread={20}
+            speed={0.05}
+            particleBaseSize={200}
+            moveParticlesOnHover={false}
+            alphaParticles={true}
+            disableRotation={false}
+            particleHoverFactor={0.3}
+          />
+        </div>
+        
+        <FadeContent blur={true} duration={1000} delay={200} className="w-full px-6 lg:px-12 xl:px-16 relative z-10">
           <div className="text-center mb-20">
-            <h2 className="text-5xl lg:text-6xl font-bold mb-8">
-              <span className="neon-text">Simple, Transparent Pricing</span>
-            </h2>
+            <BlurText
+              text="Simple, Transparent Pricing"
+              delay={80}
+              animateBy="words"
+              direction="top"
+              className="text-5xl lg:text-6xl font-bold mb-8 neon-text"
+              style={{ margin: 'auto', justifyContent: 'center' }}
+            />
             <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ margin: 'auto', color: 'var(--text-secondary)' }}>
               Choose the plan that fits your team's needs. All plans include 14-day free trial.
             </p>
@@ -900,18 +1082,23 @@ export default function LandingPage() {
               </Link>
             </SpotlightCard>
           </div>
-        </div>
+        </FadeContent>
       </section>
 
       {/* About Section */}
       <section id="about" className="min-h-screen flex items-center justify-center relative py-20" style={{margin:'auto', backgroundColor: 'var(--background-secondary)' }}>
-        <div className="w-full px-6 lg:px-12 xl:px-16">
+        <FadeContent blur={true} duration={1000} delay={200} className="w-full px-6 lg:px-12 xl:px-16">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
               <div>
-                <h2 className="text-5xl lg:text-6xl font-bold mb-8">
-                  <span className="neon-text">About TraceonAI</span>
-                </h2>
+                <BlurText
+                  text="About TraceonAI"
+                  delay={80}
+                  animateBy="words"
+                  direction="top"
+                  className="text-5xl lg:text-6xl font-bold mb-8 neon-text"
+                  style={{ margin: 'auto', justifyContent: 'center' }}
+                />
                 <p className="text-xl leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
                   We're on a mission to eliminate downtime and make reliability engineering accessible to every team, regardless of size or resources.
                 </p>
@@ -978,16 +1165,36 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </div>
+        </FadeContent>
       </section>
 
       {/* Contact Section */}
       <section id="contact" className="min-h-screen flex items-center justify-center relative py-20" style={{ backgroundColor: 'var(--background-primary)' }}>
-        <div className="w-full px-6 lg:px-12 xl:px-16">
+        {/* Particles Background */}
+        <div className="absolute inset-0 z-0">
+          <Particles
+            particleColors={['#FFFFFF']}
+            particleCount={500}
+            particleSpread={20}
+            speed={0.05}
+            particleBaseSize={200}
+            moveParticlesOnHover={false}
+            alphaParticles={true}
+            disableRotation={false}
+            particleHoverFactor={0.3}
+          />
+        </div>
+        
+        <FadeContent blur={true} duration={1000} delay={200} className="w-full px-6 lg:px-12 xl:px-16 relative z-10">
           <div className="text-center mb-20">
-            <h2 className="text-5xl lg:text-6xl font-bold mb-8">
-              <span className="neon-text">Get In Touch</span>
-            </h2>
+            <BlurText
+              text="Get In Touch"
+              delay={80}
+              animateBy="words"
+              direction="top"
+              className="text-5xl lg:text-6xl font-bold mb-8 neon-text"
+              style={{ margin: 'auto', justifyContent: 'center' }}
+            />
             <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{margin:'auto', color: 'var(--text-secondary)' }}>
               Have questions? We're here to help. Reach out and we'll get back to you as soon as possible.
             </p>
@@ -1053,8 +1260,8 @@ export default function LandingPage() {
                   />
                 </div>
 
-                <button type="submit" className="btn-primary w-full justify-center">
-                  Send Message
+                <button type="submit" className="btn-primary w-full justify-center inline-flex items-center gap-2">
+                  <span>Send Message</span>
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </form>
@@ -1129,124 +1336,154 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </div>
+        </FadeContent>
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 py-16 border-t" style={{ backgroundColor: 'var(--background-primary)', borderColor: 'var(--border)' }}>
-        <div className="w-full px-4 lg:px-8 xl:px-12">
-          <div className="grid md:grid-cols-4 gap-8">
-            {/* Company Info */}
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <div className="relative">
-                  <Hexagon className="w-8 h-8" style={{ color: 'var(--teal)' }} />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Brain className="w-4 h-4" style={{ color: 'var(--background-primary)' }} />
+      <footer className="relative z-10 border-t w-full" style={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-primary)' }}>
+        <div className="w-full px-6 lg:px-12 xl:px-16 py-20">
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
+              {/* Company Info - Larger column */}
+              <div className="lg:col-span-2 space-y-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ 
+                    backgroundColor: 'var(--neon-purple)',
+                    boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+                  }}>
+                    <Brain className="w-6 h-6" style={{ color: 'var(--bg-primary)' }} />
                   </div>
+                  <span className="text-2xl font-bold neon-text">TraceonAI</span>
                 </div>
-                <span className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>TraceonAI</span>
+                <p className="text-sm leading-relaxed max-w-sm" style={{ color: 'var(--text-secondary)' }}>
+                  Agentic AI platform that connects logging tools, databases, and communication channels 
+                  to automate incident response and root cause analysis.
+                </p>
+                
+                {/* Social Links */}
+                <div className="flex gap-3 pt-4">
+                  <a 
+                    href="mailto:hello@traceonai.com" 
+                    className="w-10 h-10 rounded-lg glass-effect flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    style={{ border: '1px solid var(--border-primary)' }}
+                  >
+                    <Mail className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                  </a>
+                  <a 
+                    href="https://github.com/traceonai" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="w-10 h-10 rounded-lg glass-effect flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    style={{ border: '1px solid var(--border-primary)' }}
+                  >
+                    <Github className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                  </a>
+                  <a 
+                    href="https://linkedin.com/company/traceonai" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="w-10 h-10 rounded-lg glass-effect flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    style={{ border: '1px solid var(--border-primary)' }}
+                  >
+                    <Linkedin className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                  </a>
+                  <a 
+                    href="https://youtube.com/@traceonai" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="w-10 h-10 rounded-lg glass-effect flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    style={{ border: '1px solid var(--border-primary)' }}
+                  >
+                    <Youtube className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                  </a>
+                  <a 
+                    href="https://traceonai.slack.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="w-10 h-10 rounded-lg glass-effect flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    style={{ border: '1px solid var(--border-primary)' }}
+                  >
+                    <Slack className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                  </a>
+                </div>
               </div>
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                AI-powered site reliability engineering platform for modern infrastructure.
-              </p>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full animate-pulse-custom" style={{ backgroundColor: 'var(--green)' }}></div>
-                <span className="text-sm status-online">All systems operational</span>
+
+              {/* Product Links */}
+              <div className="space-y-4">
+                <h4 className="font-bold text-sm uppercase tracking-wider mb-6" style={{ color: 'var(--text-primary)' }}>Product</h4>
+                <div className="space-y-3">
+                  <a href="#features" className="block text-sm transition-colors duration-300 hover:translate-x-1" style={{ color: 'var(--text-secondary)' }}>
+                    Features
+                  </a>
+                  <a href="#integrations" className="block text-sm transition-colors duration-300 hover:translate-x-1" style={{ color: 'var(--text-secondary)' }}>
+                    Integrations
+                  </a>
+                  <Link href="/docs" className="block text-sm transition-colors duration-300 hover:translate-x-1" style={{ color: 'var(--text-secondary)' }}>
+                    Documentation
+                  </Link>
+                  <a href="#pricing" className="block text-sm transition-colors duration-300 hover:translate-x-1" style={{ color: 'var(--text-secondary)' }}>
+                    Pricing
+                  </a>
+                </div>
+              </div>
+
+              {/* Solutions Links */}
+              <div className="space-y-4">
+                <h4 className="font-bold text-sm uppercase tracking-wider mb-6" style={{ color: 'var(--text-primary)' }}>Solutions</h4>
+                <div className="space-y-3">
+                  <Link href="/solutions/monitoring" className="block text-sm transition-colors duration-300 hover:translate-x-1" style={{ color: 'var(--text-secondary)' }}>
+                    Root Cause Analysis
+                  </Link>
+                  <Link href="/solutions/incident-response" className="block text-sm transition-colors duration-300 hover:translate-x-1" style={{ color: 'var(--text-secondary)' }}>
+                    Incident Response
+                  </Link>
+                  <Link href="/solutions/automation" className="block text-sm transition-colors duration-300 hover:translate-x-1" style={{ color: 'var(--text-secondary)' }}>
+                    AI Automation
+                  </Link>
+                  <Link href="/solutions/integrations" className="block text-sm transition-colors duration-300 hover:translate-x-1" style={{ color: 'var(--text-secondary)' }}>
+                    Multi-Source Integration
+                  </Link>
+                </div>
+              </div>
+
+              {/* Company Links */}
+              <div className="space-y-4">
+                <h4 className="font-bold text-sm uppercase tracking-wider mb-6" style={{ color: 'var(--text-primary)' }}>Company</h4>
+                <div className="space-y-3">
+                  <a href="#about" className="block text-sm transition-colors duration-300 hover:translate-x-1" style={{ color: 'var(--text-secondary)' }}>
+                    About
+                  </a>
+                  <Link href="/blog" className="block text-sm transition-colors duration-300 hover:translate-x-1" style={{ color: 'var(--text-secondary)' }}>
+                    Blog
+                  </Link>
+                  <Link href="/careers" className="block text-sm transition-colors duration-300 hover:translate-x-1" style={{ color: 'var(--text-secondary)' }}>
+                    Careers
+                  </Link>
+                  <a href="#contact" className="block text-sm transition-colors duration-300 hover:translate-x-1" style={{ color: 'var(--text-secondary)' }}>
+                    Contact
+                  </a>
+                </div>
               </div>
             </div>
 
-            {/* Product Links */}
-            <div className="space-y-4">
-              <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Product</h4>
-              <div className="space-y-2">
-                <a href="#features" className="block text-sm footer-link">
-                  Platform
-                </a>
-                <a href="#features" className="block text-sm footer-link">
-                  Integrations
-                </a>
-                <Link href="/login" className="block text-sm footer-link">
-                  API Docs
-                </Link>
-                <a href="#pricing" className="block text-sm footer-link">
-                  Pricing
-                </a>
+            {/* Bottom Bar */}
+            <div className="pt-8 border-t" style={{ borderColor: 'var(--border-primary)' }}>
+              <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                  © 2025 TraceonAI. All rights reserved.
+                </p>
+                <div className="flex items-center gap-8">
+                  <Link href="/privacy" className="text-sm transition-colors duration-300" style={{ color: 'var(--text-tertiary)' }}>
+                    Privacy Policy
+                  </Link>
+                  <Link href="/terms" className="text-sm transition-colors duration-300" style={{ color: 'var(--text-tertiary)' }}>
+                    Terms of Service
+                  </Link>
+                  <Link href="/security" className="text-sm transition-colors duration-300" style={{ color: 'var(--text-tertiary)' }}>
+                    Security
+                  </Link>
+                </div>
               </div>
             </div>
-
-            {/* Solutions Links */}
-            <div className="space-y-4">
-              <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Solutions</h4>
-              <div className="space-y-2">
-                <a href="#features" className="block text-sm footer-link">
-                  Monitoring
-                </a>
-                <a href="#features" className="block text-sm footer-link">
-                  Incident Response
-                </a>
-                <a href="#features" className="block text-sm footer-link">
-                  Performance
-                </a>
-                <a href="#features" className="block text-sm footer-link">
-                  Security
-                </a>
-              </div>
-            </div>
-
-            {/* Company Links */}
-            <div className="space-y-4">
-              <h4 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Company</h4>
-              <div className="space-y-2">
-                <a href="#about" className="block text-sm footer-link">
-                  About
-                </a>
-                <a href="#features" className="block text-sm footer-link">
-                  Blog
-                </a>
-                <a href="#about" className="block text-sm footer-link">
-                  Careers
-                </a>
-                <a href="#contact" className="block text-sm footer-link">
-                  Contact
-                </a>
-              </div>
-              <div className="flex gap-4 pt-2">
-                <a href="mailto:hello@traceonai.com" className="footer-social">
-                  <Mail className="w-5 h-5" />
-                </a>
-                <a href="https://github.com/traceonai" target="_blank" rel="noopener noreferrer" className="footer-social">
-                  <Github className="w-5 h-5" />
-                </a>
-                <a href="https://linkedin.com/company/traceonai" target="_blank" rel="noopener noreferrer" className="footer-social">
-                  <Linkedin className="w-5 h-5" />
-                </a>
-                <a href="https://youtube.com/@traceonai" target="_blank" rel="noopener noreferrer" className="footer-social">
-                  <Youtube className="w-5 h-5" />
-                </a>
-                <a href="https://traceonai.slack.com" target="_blank" rel="noopener noreferrer" className="footer-social">
-                  <Slack className="w-5 h-5" />
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t pt-8 mt-8 flex flex-col md:flex-row justify-between items-center" style={{ borderColor: 'var(--border)' }}>
-            <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-              © 2025 TraceonAI. All rights reserved.
-            </p>
-            <div className="flex gap-6 mt-4 md:mt-0">
-              <a href="#" className="text-sm footer-link-legal">
-                Privacy Policy
-              </a>
-              <a href="#" className="text-sm footer-link-legal">
-                Terms of Service
-              </a>
-              <a href="#" className="text-sm footer-link-legal">
-                Security
-              </a>
-            </div>
-          </div>
         </div>
       </footer>
     </div>
