@@ -1,8 +1,8 @@
 .scroll-stack-scroller {
   position: relative;
   width: 100%;
-  height: 100vh;
-  overflow-y: auto;
+  height: auto;
+  overflow-y: visible;
   overflow-x: visible;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;

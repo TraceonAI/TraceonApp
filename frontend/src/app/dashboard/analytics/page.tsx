@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import DashboardLayout from '@/components/DashboardLayout';
+import ProfessionalDashboardLayout from '@/components/ProfessionalDashboardLayout';
 import { 
   TrendingUp,
   TrendingDown,
@@ -73,150 +72,189 @@ export default function AnalyticsPage() {
   ];
 
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
-          {/* Header */}
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
-            <p className="text-gray-600 mt-1">Performance insights and trend analysis</p>
-          </div>
+    <ProfessionalDashboardLayout>
+      <div className="p-6 space-y-6" style={{ backgroundColor: 'var(--surface-default)' }}>
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>Analytics</h1>
+          <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>Performance insights and trend analysis</p>
+        </div>
 
-          {/* Metrics Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {metrics.map((metric, idx) => (
-              <div key={idx} className="bg-white rounded-2xl p-6 border border-gray-200">
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${metric.color} flex items-center justify-center mb-4`}>
-                  <metric.icon className="w-6 h-6 text-white" />
+        {/* Metrics Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {metrics.map((metric, idx) => (
+            <div 
+              key={idx} 
+              className="rounded-2xl p-6 border transition-all duration-200 hover:shadow-lg hover:border-opacity-80"
+              style={{
+                backgroundColor: 'var(--card-bg)',
+                borderColor: 'var(--card-border)'
+              }}
+            >
+              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${metric.color} flex items-center justify-center mb-4`}>
+                <metric.icon className="w-6 h-6 text-white" />
+              </div>
+              <p className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>{metric.value}</p>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>{metric.label}</p>
+              <div className="flex items-center gap-1 mt-2">
+                {metric.trend === 'up' ? (
+                  <TrendingUp className="w-4 h-4" style={{ color: 'var(--status-positive)' }} />
+                ) : (
+                  <TrendingDown className="w-4 h-4" style={{ color: 'var(--status-positive)' }} />
+                )}
+                <span className="text-xs font-medium" style={{ color: 'var(--status-positive)' }}>{metric.change}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Incident Trends Chart */}
+        <div 
+          className="rounded-2xl p-6 border"
+          style={{
+            backgroundColor: 'var(--card-bg)',
+            borderColor: 'var(--card-border)'
+          }}
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Incident Trends</h2>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--accent-primary)' }}></div>
+                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Total</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--status-positive)' }}></div>
+                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Resolved</span>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-4">
+            {incidentTrends.map((trend, idx) => (
+              <div key={idx} className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium" style={{ color: 'var(--text-secondary)' }}>{trend.month}</span>
+                  <div className="flex items-center gap-4">
+                    <span style={{ color: 'var(--text-secondary)' }}>{trend.incidents} total</span>
+                    <span style={{ color: 'var(--status-positive)' }}>{trend.resolved} resolved</span>
+                  </div>
                 </div>
-                <p className="text-3xl font-bold text-gray-900">{metric.value}</p>
-                <p className="text-sm text-gray-600 mt-1">{metric.label}</p>
-                <div className="flex items-center gap-1 mt-2">
-                  {metric.trend === 'up' ? (
-                    <TrendingUp className="w-4 h-4 text-green-600" />
-                  ) : (
-                    <TrendingDown className="w-4 h-4 text-green-600" />
-                  )}
-                  <span className="text-xs font-medium text-green-600">{metric.change}</span>
+                <div className="flex gap-1 h-8">
+                  <div 
+                    className="rounded-lg flex items-center justify-center text-white text-xs font-medium"
+                    style={{ 
+                      width: `${(trend.incidents / 350) * 100}%`,
+                      backgroundColor: 'var(--accent-primary)'
+                    }}
+                  >
+                    {trend.incidents}
+                  </div>
+                  <div 
+                    className="rounded-lg flex items-center justify-center text-white text-xs font-medium"
+                    style={{ 
+                      width: `${(trend.resolved / 350) * 100}%`,
+                      backgroundColor: 'var(--status-positive)'
+                    }}
+                  >
+                    {trend.resolved}
+                  </div>
                 </div>
               </div>
             ))}
           </div>
+        </div>
 
-          {/* Incident Trends Chart */}
-          <div className="bg-white rounded-2xl p-6 border border-gray-200">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Incident Trends</h2>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                  <span className="text-sm text-gray-600">Total</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-sm text-gray-600">Resolved</span>
-                </div>
-              </div>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Category Breakdown */}
+          <div 
+            className="rounded-2xl p-6 border"
+            style={{
+              backgroundColor: 'var(--card-bg)',
+              borderColor: 'var(--card-border)'
+            }}
+          >
+            <h2 className="text-xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>Incident Categories</h2>
             <div className="space-y-4">
-              {incidentTrends.map((trend, idx) => (
-                <div key={idx} className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium text-gray-700">{trend.month}</span>
-                    <div className="flex items-center gap-4">
-                      <span className="text-gray-600">{trend.incidents} total</span>
-                      <span className="text-green-600">{trend.resolved} resolved</span>
-                    </div>
+              {categoryBreakdown.map((cat, idx) => (
+                <div key={idx}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>{cat.category}</span>
+                    <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{cat.count} ({cat.percentage}%)</span>
                   </div>
-                  <div className="flex gap-1 h-8">
+                  <div className="w-full rounded-full h-2" style={{ backgroundColor: 'var(--surface-subtle)' }}>
                     <div 
-                      className="bg-purple-500 rounded-lg flex items-center justify-center text-white text-xs font-medium"
-                      style={{ width: `${(trend.incidents / 350) * 100}%` }}
-                    >
-                      {trend.incidents}
-                    </div>
-                    <div 
-                      className="bg-green-500 rounded-lg flex items-center justify-center text-white text-xs font-medium"
-                      style={{ width: `${(trend.resolved / 350) * 100}%` }}
-                    >
-                      {trend.resolved}
-                    </div>
+                      className={`${cat.color} h-2 rounded-full transition-all`}
+                      style={{ width: `${cat.percentage}%` }}
+                    ></div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Category Breakdown */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Incident Categories</h2>
-              <div className="space-y-4">
-                {categoryBreakdown.map((cat, idx) => (
-                  <div key={idx}>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">{cat.category}</span>
-                      <span className="text-sm text-gray-600">{cat.count} ({cat.percentage}%)</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
-                        className={`${cat.color} h-2 rounded-full transition-all`}
-                        style={{ width: `${cat.percentage}%` }}
-                      ></div>
-                    </div>
+          {/* AI Performance */}
+          <div 
+            className="rounded-2xl p-6 border"
+            style={{
+              backgroundColor: 'var(--card-bg)',
+              borderColor: 'var(--card-border)'
+            }}
+          >
+            <h2 className="text-xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>AI Performance Metrics</h2>
+            <div className="space-y-4">
+              {aiPerformance.map((perf, idx) => (
+                <div 
+                  key={idx} 
+                  className="flex items-center justify-between p-4 rounded-lg"
+                  style={{ backgroundColor: 'var(--surface-subtle)' }}
+                >
+                  <div className="flex items-center gap-3">
+                    <Target className="w-5 h-5" style={{ color: 'var(--accent-primary)' }} />
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{perf.metric}</span>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* AI Performance */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">AI Performance Metrics</h2>
-              <div className="space-y-4">
-                {aiPerformance.map((perf, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <Target className="w-5 h-5 text-purple-600" />
-                      <span className="text-sm font-medium text-gray-900">{perf.metric}</span>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-lg font-bold text-gray-900">{perf.value}</p>
-                      <p className="text-xs text-green-600 font-medium">{perf.trend}</p>
-                    </div>
+                  <div className="text-right">
+                    <p className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>{perf.value}</p>
+                    <p className="text-xs font-medium" style={{ color: 'var(--status-positive)' }}>{perf.trend}</p>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Resolution Time Distribution */}
-          <div className="bg-white rounded-2xl p-6 border border-gray-200">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Resolution Time Distribution</h2>
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-              <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl">
-                <p className="text-3xl font-bold text-gray-900">62%</p>
-                <p className="text-sm text-gray-600 mt-1">&lt; 5s</p>
-              </div>
-              <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl">
-                <p className="text-3xl font-bold text-gray-900">23%</p>
-                <p className="text-sm text-gray-600 mt-1">5-10s</p>
-              </div>
-              <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl">
-                <p className="text-3xl font-bold text-gray-900">9%</p>
-                <p className="text-sm text-gray-600 mt-1">10-30s</p>
-              </div>
-              <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl">
-                <p className="text-3xl font-bold text-gray-900">4%</p>
-                <p className="text-sm text-gray-600 mt-1">30-60s</p>
-              </div>
-              <div className="text-center p-4 bg-gradient-to-br from-red-50 to-rose-50 rounded-xl">
-                <p className="text-3xl font-bold text-gray-900">2%</p>
-                <p className="text-sm text-gray-600 mt-1">&gt; 60s</p>
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </DashboardLayout>
-    </ProtectedRoute>
+
+        {/* Resolution Time Distribution */}
+        <div 
+          className="rounded-2xl p-6 border"
+          style={{
+            backgroundColor: 'var(--card-bg)',
+            borderColor: 'var(--card-border)'
+          }}
+        >
+          <h2 className="text-xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>Resolution Time Distribution</h2>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="text-center p-4 rounded-xl" style={{ backgroundColor: 'var(--surface-subtle)' }}>
+              <p className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>62%</p>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>&lt; 5s</p>
+            </div>
+            <div className="text-center p-4 rounded-xl" style={{ backgroundColor: 'var(--surface-subtle)' }}>
+              <p className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>23%</p>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>5-10s</p>
+            </div>
+            <div className="text-center p-4 rounded-xl" style={{ backgroundColor: 'var(--surface-subtle)' }}>
+              <p className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>9%</p>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>10-30s</p>
+            </div>
+            <div className="text-center p-4 rounded-xl" style={{ backgroundColor: 'var(--surface-subtle)' }}>
+              <p className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>4%</p>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>30-60s</p>
+            </div>
+            <div className="text-center p-4 rounded-xl" style={{ backgroundColor: 'var(--surface-subtle)' }}>
+              <p className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>2%</p>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>&gt; 60s</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ProfessionalDashboardLayout>
   );
 }

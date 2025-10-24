@@ -1,223 +1,391 @@
 'use client';
 
-import React from 'react';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import DashboardLayout from '@/components/DashboardLayout';
-import { 
+import React, { useState } from 'react';
+import ProfessionalDashboardLayout from '@/components/ProfessionalDashboardLayout';
+import {
+  Plug,
+  CheckCircle,
+  AlertTriangle,
+  Plus,
+  Settings,
+  Zap,
   Database,
   MessageSquare,
+  Mail,
+  Cloud,
   Activity,
-  CheckCircle,
-  AlertCircle,
-  Settings,
-  TrendingUp,
-  Zap
+  TrendingUp
 } from 'lucide-react';
 
+interface Integration {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  status: 'connected' | 'disconnected' | 'error';
+  icon: string;
+  dataFlowRate: string;
+  lastSync: string;
+  eventsToday: number;
+}
+
 export default function IntegrationsPage() {
-  const integrations = [
+  const integrations: Integration[] = [
     {
-      name: 'Datadog',
-      category: 'Monitoring',
-      status: 'Connected',
-      icon: Activity,
-      color: 'from-purple-500 to-violet-500',
-      dataPoints: '1.2M/day',
-      lastSync: '2 mins ago'
-    },
-    {
-      name: 'PostgreSQL',
-      category: 'Database',
-      status: 'Connected',
-      icon: Database,
-      color: 'from-blue-500 to-cyan-500',
-      dataPoints: '845K/day',
-      lastSync: '5 mins ago'
-    },
-    {
+      id: '1',
       name: 'Slack',
       category: 'Communication',
-      status: 'Connected',
-      icon: MessageSquare,
-      color: 'from-pink-500 to-rose-500',
-      dataPoints: '342 notifications/day',
-      lastSync: '1 min ago'
+      description: 'Send notifications and alerts to Slack channels',
+      status: 'connected',
+      icon: 'slack',
+      dataFlowRate: '2.4K/day',
+      lastSync: '2 minutes ago',
+      eventsToday: 127
     },
     {
+      id: '2',
       name: 'PagerDuty',
       category: 'Incident Management',
-      status: 'Connected',
-      icon: AlertCircle,
-      color: 'from-green-500 to-emerald-500',
-      dataPoints: '127 alerts/day',
-      lastSync: '3 mins ago'
+      description: 'Automated incident escalation and on-call management',
+      status: 'connected',
+      icon: 'pagerduty',
+      dataFlowRate: '340/day',
+      lastSync: '5 minutes ago',
+      eventsToday: 23
     },
     {
-      name: 'MongoDB',
-      category: 'Database',
-      status: 'Connected',
-      icon: Database,
-      color: 'from-green-600 to-teal-500',
-      dataPoints: '625K/day',
-      lastSync: '4 mins ago'
-    },
-    {
-      name: 'Prometheus',
+      id: '3',
+      name: 'Datadog',
       category: 'Monitoring',
-      status: 'Connected',
-      icon: TrendingUp,
-      color: 'from-orange-500 to-red-500',
-      dataPoints: '2.1M/day',
-      lastSync: '1 min ago'
+      description: 'Stream metrics and logs to Datadog',
+      status: 'connected',
+      icon: 'datadog',
+      dataFlowRate: '45K/hour',
+      lastSync: '1 minute ago',
+      eventsToday: 1240
     },
     {
-      name: 'Redis',
-      category: 'Cache',
-      status: 'Connected',
-      icon: Zap,
-      color: 'from-red-500 to-orange-500',
-      dataPoints: '3.4M/day',
-      lastSync: '30 secs ago'
+      id: '4',
+      name: 'Jira',
+      category: 'Project Management',
+      description: 'Create and update tickets from incidents',
+      status: 'error',
+      icon: 'jira',
+      dataFlowRate: '180/day',
+      lastSync: '2 hours ago',
+      eventsToday: 8
     },
     {
-      name: 'Elasticsearch',
-      category: 'Logging',
-      status: 'Connected',
-      icon: Database,
-      color: 'from-yellow-500 to-amber-500',
-      dataPoints: '1.8M/day',
-      lastSync: '2 mins ago'
+      id: '5',
+      name: 'GitHub',
+      category: 'Development',
+      description: 'Track deployments and code changes',
+      status: 'connected',
+      icon: 'github',
+      dataFlowRate: '420/day',
+      lastSync: '10 minutes ago',
+      eventsToday: 34
     },
+    {
+      id: '6',
+      name: 'AWS CloudWatch',
+      category: 'Cloud Monitoring',
+      description: 'Ingest metrics from AWS infrastructure',
+      status: 'connected',
+      icon: 'aws',
+      dataFlowRate: '120K/hour',
+      lastSync: '30 seconds ago',
+      eventsToday: 4892
+    }
   ];
 
   const stats = [
-    {
-      label: 'Total Integrations',
-      value: '8',
-      change: '+2 this month',
-      icon: Settings,
-      color: 'from-purple-500 to-blue-500'
-    },
-    {
-      label: 'Data Points Today',
-      value: '10.4M',
-      change: '+12% from yesterday',
-      icon: TrendingUp,
-      color: 'from-blue-500 to-cyan-500'
-    },
-    {
-      label: 'Active Connections',
-      value: '8/8',
-      change: '100% uptime',
-      icon: CheckCircle,
-      color: 'from-green-500 to-emerald-500'
-    },
-    {
-      label: 'Avg Sync Time',
-      value: '2.1s',
-      change: '-8% faster',
-      icon: Zap,
-      color: 'from-orange-500 to-red-500'
-    },
+    { label: 'Total Integrations', value: '24', icon: Plug, color: 'var(--accent-primary)' },
+    { label: 'Active', value: '18', icon: CheckCircle, color: 'var(--status-positive)' },
+    { label: 'Events Today', value: '6.3K', icon: Activity, color: 'var(--status-info)' },
+    { label: 'Data Flow', value: '2.8M/day', icon: TrendingUp, color: 'var(--status-warning)' }
   ];
 
+  const statusConfig = {
+    connected: { icon: CheckCircle, color: 'var(--status-positive)', bg: 'var(--status-positive-bg)', text: 'var(--status-positive-text)' },
+    disconnected: { icon: AlertTriangle, color: 'var(--text-muted)', bg: 'var(--surface-subtle)', text: 'var(--text-muted)' },
+    error: { icon: AlertTriangle, color: 'var(--status-critical)', bg: 'var(--status-critical-bg)', text: 'var(--status-critical-text)' }
+  };
+
+  const categoryIcons: Record<string, any> = {
+    'Communication': MessageSquare,
+    'Incident Management': AlertTriangle,
+    'Monitoring': Activity,
+    'Project Management': Plug,
+    'Development': Cloud,
+    'Cloud Monitoring': Database
+  };
+
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Integrations</h1>
-              <p className="text-gray-600 mt-1">Manage your connected data sources and tools</p>
-            </div>
-            <button className="px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg hover:shadow-lg transition-shadow font-medium">
-              Add Integration
-            </button>
+    <ProfessionalDashboardLayout>
+      <div className="p-6 space-y-6" style={{ backgroundColor: 'var(--surface-default)' }}>
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
+              Integrations
+            </h1>
+            <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+              Connect with your favorite tools and platforms
+            </p>
           </div>
+          <button
+            className="px-6 py-3 rounded-xl font-semibold flex items-center gap-2"
+            style={{
+              backgroundColor: 'var(--button-primary-bg)',
+              color: 'var(--button-primary-text)',
+              boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)',
+              transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 16px 32px rgba(124, 58, 237, 0.4)';
+              const icon = e.currentTarget.querySelector('svg');
+              if (icon) (icon as unknown as HTMLElement).style.transform = 'scale(1.2) rotate(90deg)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.3)';
+              const icon = e.currentTarget.querySelector('svg');
+              if (icon) (icon as unknown as HTMLElement).style.transform = 'scale(1) rotate(0deg)';
+            }}
+          >
+            <Plus className="w-5 h-5" style={{ transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)' }} />
+            Add Integration
+          </button>
+        </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {stats.map((stat, idx) => (
-              <div key={idx} className="bg-white rounded-2xl p-6 border border-gray-200">
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-4`}>
-                  <stat.icon className="w-6 h-6 text-white" />
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {stats.map((stat, idx) => {
+            const Icon = stat.icon;
+            return (
+              <div
+                key={idx}
+                className="p-6 rounded-xl border cursor-pointer"
+                style={{
+                  backgroundColor: 'var(--card-bg)',
+                  borderColor: 'var(--card-border)',
+                  transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 12px 24px rgba(124, 58, 237, 0.15)';
+                  e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                  const iconContainer = e.currentTarget.querySelector('.icon-container');
+                  if (iconContainer) (iconContainer as HTMLElement).style.transform = 'scale(1.1) rotate(12deg)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.borderColor = 'var(--card-border)';
+                  const iconContainer = e.currentTarget.querySelector('.icon-container');
+                  if (iconContainer) (iconContainer as HTMLElement).style.transform = 'scale(1) rotate(0deg)';
+                }}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div 
+                    className="icon-container w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{ 
+                      backgroundColor: 'var(--surface-subtle)',
+                      transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                  >
+                    <Icon className="w-6 h-6" style={{ color: stat.color }} />
+                  </div>
                 </div>
-                <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
-                <p className="text-sm text-gray-600 mt-1">{stat.label}</p>
-                <p className="text-xs text-green-600 font-medium mt-2">{stat.change}</p>
+                <p className="text-3xl font-bold mb-1" style={{ color: 'var(--text-primary)' }}>
+                  {stat.value}
+                </p>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  {stat.label}
+                </p>
               </div>
-            ))}
-          </div>
+            );
+          })}
+        </div>
 
-          {/* Integrations Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {integrations.map((integration, idx) => (
-              <div key={idx} className="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
+        {/* Integrations Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {integrations.map((integration) => {
+            const CategoryIcon = categoryIcons[integration.category] || Plug;
+            const StatusIcon = statusConfig[integration.status].icon;
+            const statusStyle = statusConfig[integration.status];
+            
+            return (
+              <div
+                key={integration.id}
+                className="p-6 rounded-xl border cursor-pointer group"
+                style={{
+                  backgroundColor: 'var(--card-bg)',
+                  borderColor: 'var(--card-border)',
+                  transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-6px)';
+                  e.currentTarget.style.boxShadow = '0 16px 32px rgba(124, 58, 237, 0.2)';
+                  e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                  const iconContainer = e.currentTarget.querySelector('.integration-icon');
+                  if (iconContainer) (iconContainer as HTMLElement).style.transform = 'scale(1.1) rotate(-5deg)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.borderColor = 'var(--card-border)';
+                  const iconContainer = e.currentTarget.querySelector('.integration-icon');
+                  if (iconContainer) (iconContainer as HTMLElement).style.transform = 'scale(1) rotate(0deg)';
+                }}
+              >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${integration.color} flex items-center justify-center shadow-lg`}>
-                      <integration.icon className="w-7 h-7 text-white" />
+                  <div className="flex items-center gap-3">
+                    <div 
+                      className="integration-icon w-12 h-12 rounded-xl flex items-center justify-center"
+                      style={{ 
+                        backgroundColor: 'var(--accent-primary)',
+                        color: 'var(--text-inverse)',
+                        transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                      }}
+                    >
+                      <CategoryIcon className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-gray-900">{integration.name}</h3>
-                      <p className="text-sm text-gray-600">{integration.category}</p>
+                      <h3 className="font-bold text-lg group-hover:underline" style={{ color: 'var(--text-primary)' }}>
+                        {integration.name}
+                      </h3>
+                      <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                        {integration.category}
+                      </p>
                     </div>
                   </div>
-                  <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium flex items-center gap-1">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span 
+                    className="px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1"
+                    style={{
+                      backgroundColor: statusStyle.bg,
+                      color: statusStyle.text
+                    }}
+                  >
+                    <StatusIcon className="w-3 h-3" />
                     {integration.status}
                   </span>
                 </div>
-                <div className="space-y-2 pt-4 border-t border-gray-100">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Data Points</span>
-                    <span className="text-sm font-medium text-gray-900">{integration.dataPoints}</span>
+
+                <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+                  {integration.description}
+                </p>
+
+                {/* Metrics */}
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div 
+                    className="p-3 rounded-lg"
+                    style={{ backgroundColor: 'var(--surface-subtle)' }}
+                  >
+                    <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>Data Flow</p>
+                    <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
+                      {integration.dataFlowRate}
+                    </p>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Last Sync</span>
-                    <span className="text-sm font-medium text-gray-900">{integration.lastSync}</span>
+                  <div 
+                    className="p-3 rounded-lg"
+                    style={{ backgroundColor: 'var(--surface-subtle)' }}
+                  >
+                    <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>Events Today</p>
+                    <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
+                      {integration.eventsToday.toLocaleString()}
+                    </p>
                   </div>
                 </div>
-                <button className="w-full mt-4 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                  Configure
-                </button>
+
+                {/* Footer */}
+                <div className="flex items-center justify-between pt-4 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
+                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                    Last sync: {integration.lastSync}
+                  </span>
+                  <button
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium"
+                    style={{
+                      backgroundColor: 'var(--surface-subtle)',
+                      color: 'var(--text-secondary)',
+                      transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.backgroundColor = 'var(--accent-primary)';
+                      e.currentTarget.style.color = 'var(--text-inverse)';
+                      const icon = e.currentTarget.querySelector('svg');
+                      if (icon) (icon as unknown as HTMLElement).style.transform = 'rotate(90deg)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.backgroundColor = 'var(--surface-subtle)';
+                      e.currentTarget.style.color = 'var(--text-secondary)';
+                      const icon = e.currentTarget.querySelector('svg');
+                      if (icon) (icon as unknown as HTMLElement).style.transform = 'rotate(0deg)';
+                    }}
+                  >
+                    <Settings className="w-3 h-3 inline mr-1" style={{ transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)' }} />
+                    Configure
+                  </button>
+                </div>
               </div>
+            );
+          })}
+        </div>
+
+        {/* Available Integrations */}
+        <div 
+          className="p-6 rounded-xl border"
+          style={{
+            backgroundColor: 'var(--card-bg)',
+            borderColor: 'var(--card-border)'
+          }}
+        >
+          <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+            Available Integrations
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {['Grafana', 'New Relic', 'Splunk', 'Prometheus', 'Jenkins', 'CircleCI'].map((name) => (
+              <button
+                key={name}
+                className="p-4 rounded-lg text-center"
+                style={{
+                  backgroundColor: 'var(--surface-subtle)',
+                  border: `1px solid var(--border-default)`,
+                  transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
+                  e.currentTarget.style.boxShadow = '0 8px 16px rgba(124, 58, 237, 0.15)';
+                  e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                  e.currentTarget.style.backgroundColor = 'var(--card-bg)';
+                  const icon = e.currentTarget.querySelector('svg');
+                  if (icon) (icon as unknown as HTMLElement).style.transform = 'scale(1.15) rotate(12deg)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.borderColor = 'var(--border-default)';
+                  e.currentTarget.style.backgroundColor = 'var(--surface-subtle)';
+                  const icon = e.currentTarget.querySelector('svg');
+                  if (icon) (icon as unknown as HTMLElement).style.transform = 'scale(1) rotate(0deg)';
+                }}
+              >
+                <Plug className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--text-muted)', transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)' }} />
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  {name}
+                </p>
+                <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+                  Not connected
+                </p>
+              </button>
             ))}
           </div>
-
-          {/* Data Flow Overview */}
-          <div className="bg-white rounded-2xl p-6 border border-gray-200">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Data Flow Overview</h2>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Activity className="w-5 h-5 text-purple-600" />
-                  <span className="font-medium text-gray-900">Monitoring Sources</span>
-                </div>
-                <span className="text-2xl font-bold text-gray-900">3.3M</span>
-                <span className="text-sm text-gray-600">events/day</span>
-              </div>
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Database className="w-5 h-5 text-blue-600" />
-                  <span className="font-medium text-gray-900">Database Sources</span>
-                </div>
-                <span className="text-2xl font-bold text-gray-900">5.3M</span>
-                <span className="text-sm text-gray-600">queries/day</span>
-              </div>
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <MessageSquare className="w-5 h-5 text-green-600" />
-                  <span className="font-medium text-gray-900">Communication Channels</span>
-                </div>
-                <span className="text-2xl font-bold text-gray-900">469</span>
-                <span className="text-sm text-gray-600">messages/day</span>
-              </div>
-            </div>
-          </div>
         </div>
-      </DashboardLayout>
-    </ProtectedRoute>
+      </div>
+    </ProfessionalDashboardLayout>
   );
 }

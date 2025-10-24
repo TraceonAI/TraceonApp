@@ -1,6 +1,33 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
 
+/* Custom utility classes for professional interactions */
+@layer utilities {
+  .active\:scale-98:active {
+    transform: scale(0.98);
+  }
+  
+  .hover\:brightness-110:hover {
+    filter: brightness(1.1);
+  }
+  
+  /* Smooth sidebar transitions */
+  .sidebar-transition {
+    transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .sidebar-content-fade {
+    transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Smooth arrow reveal on hover */
+  .group:hover .group-hover\:arrow-reveal {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+  }
+}
+
 /* Graphite-inspired color variables */
 :root {
   /* Background Colors */

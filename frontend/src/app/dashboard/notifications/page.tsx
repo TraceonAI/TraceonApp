@@ -1,266 +1,409 @@
 'use client';
 
-import React from 'react';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import DashboardLayout from '@/components/DashboardLayout';
-import { 
+import React, { useState } from 'react';
+import ProfessionalDashboardLayout from '@/components/ProfessionalDashboardLayout';
+import {
   Bell,
-  MessageSquare,
   Mail,
+  MessageSquare,
   Smartphone,
   CheckCircle,
-  Clock,
-  Settings,
-  Filter
+  AlertTriangle,
+  Filter,
+  Settings
 } from 'lucide-react';
 
+interface Notification {
+  id: string;
+  type: 'alert' | 'warning' | 'success' | 'info';
+  channel: 'email' | 'slack' | 'pagerduty' | 'webhook';
+  title: string;
+  message: string;
+  timestamp: string;
+  read: boolean;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+}
+
 export default function NotificationsPage() {
-  const channels = [
+  const [selectedType, setSelectedType] = useState<string>('all');
+
+  const notifications: Notification[] = [
     {
-      name: 'Slack',
-      type: 'slack',
-      status: 'Active',
-      icon: MessageSquare,
-      color: 'from-pink-500 to-rose-500',
-      sent: '342',
-      delivered: '342'
+      id: '1',
+      type: 'alert',
+      channel: 'slack',
+      title: 'High CPU Usage Detected',
+      message: 'Production server CPU usage exceeded 85% threshold',
+      timestamp: '2 minutes ago',
+      read: false,
+      priority: 'critical'
     },
     {
-      name: 'Email',
-      type: 'email',
-      status: 'Active',
-      icon: Mail,
-      color: 'from-blue-500 to-cyan-500',
-      sent: '156',
-      delivered: '154'
+      id: '2',
+      type: 'warning',
+      channel: 'email',
+      title: 'Database Connection Pool Warning',
+      message: 'Connection pool utilization at 75%',
+      timestamp: '15 minutes ago',
+      read: false,
+      priority: 'high'
     },
     {
-      name: 'PagerDuty',
-      type: 'pagerduty',
-      status: 'Active',
-      icon: Smartphone,
-      color: 'from-green-500 to-emerald-500',
-      sent: '89',
-      delivered: '89'
+      id: '3',
+      type: 'success',
+      channel: 'slack',
+      title: 'Deployment Successful',
+      message: 'API v2.4.1 deployed successfully to production',
+      timestamp: '1 hour ago',
+      read: true,
+      priority: 'medium'
     },
+    {
+      id: '4',
+      type: 'info',
+      channel: 'pagerduty',
+      title: 'Scheduled Maintenance',
+      message: 'Database maintenance window starts in 2 hours',
+      timestamp: '3 hours ago',
+      read: true,
+      priority: 'low'
+    },
+    {
+      id: '5',
+      type: 'alert',
+      channel: 'webhook',
+      title: 'API Error Rate Spike',
+      message: 'Error rate increased to 3.2% in the last 10 minutes',
+      timestamp: '4 hours ago',
+      read: false,
+      priority: 'high'
+    }
   ];
 
-  const rules = [
-    {
-      name: 'Critical Database Issues',
-      trigger: 'Severity: Critical, Source: Database',
-      channels: ['Slack', 'PagerDuty', 'Email'],
-      active: true
-    },
-    {
-      name: 'API Performance Degradation',
-      trigger: 'Response time > 500ms for 2 mins',
-      channels: ['Slack', 'Email'],
-      active: true
-    },
-    {
-      name: 'Memory Leak Detection',
-      trigger: 'Memory usage > 85%',
-      channels: ['Slack', 'PagerDuty'],
-      active: true
-    },
-    {
-      name: 'Payment Processing Errors',
-      trigger: 'Service: payment-service, Type: error',
-      channels: ['Slack', 'PagerDuty', 'Email'],
-      active: true
-    },
-    {
-      name: 'Cache Performance Issues',
-      trigger: 'Redis latency > 100ms',
-      channels: ['Slack'],
-      active: false
-    },
+  const stats = [
+    { label: 'Unread', value: '23', icon: Bell, color: 'var(--accent-primary)' },
+    { label: 'Today', value: '127', icon: CheckCircle, color: 'var(--status-info)' },
+    { label: 'Channels', value: '8', icon: MessageSquare, color: 'var(--status-warning)' },
+    { label: 'Delivery Rate', value: '99.8%', icon: CheckCircle, color: 'var(--status-positive)' }
   ];
 
-  const recentNotifications = [
-    {
-      title: 'Database latency spike detected',
-      message: 'PostgreSQL query time increased by 340%',
-      channel: 'Slack',
-      time: '2 mins ago',
-      status: 'Delivered'
-    },
-    {
-      title: 'User service restarted successfully',
-      message: 'Memory leak resolved, pod restarted',
-      channel: 'Email',
-      time: '8 mins ago',
-      status: 'Delivered'
-    },
-    {
-      title: 'Critical: Payment API timeout',
-      message: 'Payment processing endpoint not responding',
-      channel: 'PagerDuty',
-      time: '15 mins ago',
-      status: 'Delivered'
-    },
-    {
-      title: 'Redis cache connection restored',
-      message: 'Cache performance back to normal',
-      channel: 'Slack',
-      time: '24 mins ago',
-      status: 'Delivered'
-    },
-    {
-      title: 'API rate limit threshold reached',
-      message: 'Rate limit at 85% for external-api service',
-      channel: 'Email',
-      time: '42 mins ago',
-      status: 'Delivered'
-    },
-  ];
+  const channelConfig = {
+    email: { icon: Mail, color: 'var(--status-info)', label: 'Email' },
+    slack: { icon: MessageSquare, color: '#E01E5A', label: 'Slack' },
+    pagerduty: { icon: Smartphone, color: '#06AC38', label: 'PagerDuty' },
+    webhook: { icon: Bell, color: 'var(--accent-primary)', label: 'Webhook' }
+  };
+
+  const typeConfig = {
+    alert: { color: 'var(--status-critical)', bg: 'var(--status-critical-bg)', text: 'var(--status-critical-text)' },
+    warning: { color: 'var(--status-warning)', bg: 'var(--status-warning-bg)', text: 'var(--status-warning-text)' },
+    success: { color: 'var(--status-positive)', bg: 'var(--status-positive-bg)', text: 'var(--status-positive-text)' },
+    info: { color: 'var(--status-info)', bg: 'var(--status-info-bg)', text: 'var(--status-info-text)' }
+  };
+
+  const priorityConfig = {
+    critical: { color: 'var(--status-critical)' },
+    high: { color: 'var(--status-warning)' },
+    medium: { color: 'var(--status-info)' },
+    low: { color: 'var(--text-muted)' }
+  };
 
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Notifications</h1>
-              <p className="text-gray-600 mt-1">Configure alerts and notification channels</p>
-            </div>
-            <button className="px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg hover:shadow-lg transition-shadow font-medium">
-              Create Rule
+    <ProfessionalDashboardLayout>
+      <div className="p-6 space-y-6" style={{ backgroundColor: 'var(--surface-default)' }}>
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
+              Alerts & Notifications
+            </h1>
+            <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+              Manage your multi-channel alerting system
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <button
+              className="px-4 py-2 rounded-xl font-semibold flex items-center gap-2"
+              style={{
+                backgroundColor: 'var(--surface-subtle)',
+                color: 'var(--text-secondary)',
+                border: `1px solid var(--border-default)`,
+                transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 16px rgba(124, 58, 237, 0.1)';
+                const icon = e.currentTarget.querySelector('svg');
+                if (icon) icon.style.transform = 'scale(1.1) rotate(90deg)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+                const icon = e.currentTarget.querySelector('svg');
+                if (icon) icon.style.transform = 'scale(1) rotate(0deg)';
+              }}
+            >
+              <Settings 
+                className="w-5 h-5" 
+                style={{ transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)' }}
+              />
+              Configure Channels
+            </button>
+            <button
+              className="px-6 py-3 rounded-xl font-semibold flex items-center gap-2"
+              style={{
+                backgroundColor: 'var(--button-primary-bg)',
+                color: 'var(--button-primary-text)',
+                boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)',
+                transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
+                e.currentTarget.style.boxShadow = '0 20px 40px rgba(124, 58, 237, 0.4)';
+                const icon = e.currentTarget.querySelector('svg');
+                if (icon) icon.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.3)';
+                const icon = e.currentTarget.querySelector('svg');
+                if (icon) icon.style.transform = 'scale(1)';
+              }}
+            >
+              <Bell 
+                className="w-5 h-5" 
+                style={{ transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)' }}
+              />
+              Create Alert Rule
             </button>
           </div>
+        </div>
 
-          {/* Channel Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {channels.map((channel, idx) => (
-              <div key={idx} className="bg-white rounded-2xl p-6 border border-gray-200">
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {stats.map((stat, idx) => {
+            const Icon = stat.icon;
+            return (
+              <div
+                key={idx}
+                className="p-6 rounded-xl border cursor-pointer"
+                style={{
+                  backgroundColor: 'var(--card-bg)',
+                  borderColor: 'var(--card-border)',
+                  transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 12px 24px rgba(124, 58, 237, 0.15)';
+                  e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                  const iconContainer = e.currentTarget.querySelector('.icon-container');
+                  if (iconContainer) (iconContainer as HTMLElement).style.transform = 'scale(1.1) rotate(12deg)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.borderColor = 'var(--card-border)';
+                  const iconContainer = e.currentTarget.querySelector('.icon-container');
+                  if (iconContainer) (iconContainer as HTMLElement).style.transform = 'scale(1) rotate(0deg)';
+                }}
+              >
                 <div className="flex items-center justify-between mb-4">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${channel.color} flex items-center justify-center`}>
-                    <channel.icon className="w-6 h-6 text-white" />
-                  </div>
-                  <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium flex items-center gap-1">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    {channel.status}
-                  </span>
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">{channel.name}</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-600">Sent Today</p>
-                    <p className="text-2xl font-bold text-gray-900">{channel.sent}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Delivered</p>
-                    <p className="text-2xl font-bold text-gray-900">{channel.delivered}</p>
+                  <div 
+                    className="icon-container w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{ 
+                      backgroundColor: 'var(--surface-subtle)',
+                      transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                  >
+                    <Icon className="w-6 h-6" style={{ color: stat.color }} />
                   </div>
                 </div>
+                <p className="text-3xl font-bold mb-1" style={{ color: 'var(--text-primary)' }}>
+                  {stat.value}
+                </p>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  {stat.label}
+                </p>
               </div>
-            ))}
-          </div>
+            );
+          })}
+        </div>
 
-          {/* Notification Rules */}
-          <div className="bg-white rounded-2xl p-6 border border-gray-200">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Notification Rules</h2>
-              <button className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
-                <Filter className="w-4 h-4" />
-                Filter
-              </button>
-            </div>
-            <div className="space-y-3">
-              {rules.map((rule, idx) => (
-                <div key={idx} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="font-semibold text-gray-900">{rule.name}</h3>
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        rule.active 
-                          ? 'bg-green-100 text-green-700' 
-                          : 'bg-gray-100 text-gray-600'
-                      }`}>
-                        {rule.active ? 'Active' : 'Inactive'}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-2">{rule.trigger}</p>
-                    <div className="flex items-center gap-2">
-                      <Bell className="w-4 h-4 text-gray-400" />
-                      <div className="flex gap-2">
-                        {rule.channels.map((channel, cIdx) => (
-                          <span key={cIdx} className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-medium">
-                            {channel}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
+        {/* Active Channels */}
+        <div 
+          className="p-6 rounded-xl border"
+          style={{
+            backgroundColor: 'var(--card-bg)',
+            borderColor: 'var(--card-border)'
+          }}
+        >
+          <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+            Active Channels
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {Object.entries(channelConfig).map(([key, config]) => {
+              const Icon = config.icon;
+              return (
+                <div 
+                  key={key}
+                  className="p-4 rounded-lg cursor-pointer"
+                  style={{ 
+                    backgroundColor: 'var(--surface-subtle)',
+                    transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 8px 16px rgba(124, 58, 237, 0.1)';
+                    const icon = e.currentTarget.querySelector('.channel-icon');
+                    if (icon) (icon as HTMLElement).style.transform = 'scale(1.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
+                    const icon = e.currentTarget.querySelector('.channel-icon');
+                    if (icon) (icon as HTMLElement).style.transform = 'scale(1)';
+                  }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <Icon 
+                      className="channel-icon w-6 h-6" 
+                      style={{ 
+                        color: config.color,
+                        transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                      }} 
+                    />
+                    <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                      {config.label}
+                    </span>
                   </div>
-                  <button className="ml-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                    <Settings className="w-5 h-5 text-gray-600" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Recent Notifications */}
-          <div className="bg-white rounded-2xl p-6 border border-gray-200">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Recent Notifications</h2>
-            <div className="space-y-3">
-              {recentNotifications.map((notif, idx) => (
-                <div key={idx} className="flex items-start justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Bell className="w-4 h-4 text-purple-500" />
-                      <h3 className="font-semibold text-gray-900">{notif.title}</h3>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-2">{notif.message}</p>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-gray-500 flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {notif.time}
-                      </span>
-                      <span className="text-xs text-gray-500">via {notif.channel}</span>
-                    </div>
-                  </div>
-                  <div className="ml-4">
-                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium flex items-center gap-1">
-                      <CheckCircle className="w-3 h-3" />
-                      {notif.status}
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" style={{ color: 'var(--status-positive)' }} />
+                    <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      Operational
                     </span>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Delivery Stats */}
-          <div className="bg-white rounded-2xl p-6 border border-gray-200">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Delivery Statistics</h2>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl">
-                <Bell className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-gray-900">587</p>
-                <p className="text-sm text-gray-600 mt-1">Total Sent Today</p>
-              </div>
-              <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl">
-                <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-gray-900">99.7%</p>
-                <p className="text-sm text-gray-600 mt-1">Delivery Rate</p>
-              </div>
-              <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl">
-                <Clock className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-gray-900">0.8s</p>
-                <p className="text-sm text-gray-600 mt-1">Avg Delivery Time</p>
-              </div>
-              <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl">
-                <Settings className="w-8 h-8 text-orange-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-gray-900">5</p>
-                <p className="text-sm text-gray-600 mt-1">Active Rules</p>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
-      </DashboardLayout>
-    </ProtectedRoute>
+
+        {/* Filter */}
+        <div className="flex items-center gap-3">
+          <Filter className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />
+          <div className="flex gap-2">
+            {['all', 'alert', 'warning', 'success', 'info'].map((type) => (
+              <button
+                key={type}
+                onClick={() => setSelectedType(type)}
+                className="px-4 py-2 rounded-lg text-sm font-medium capitalize"
+                style={{
+                  backgroundColor: selectedType === type ? 'var(--accent-primary)' : 'var(--surface-subtle)',
+                  color: selectedType === type ? 'var(--text-inverse)' : 'var(--text-secondary)',
+                  transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  if (selectedType !== type) {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.1)';
+                    e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.borderColor = 'transparent';
+                }}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Notifications List */}
+        <div className="space-y-3">
+          {notifications.map((notification) => {
+            const ChannelIcon = channelConfig[notification.channel].icon;
+            const typeStyle = typeConfig[notification.type];
+            
+            return (
+              <div
+                key={notification.id}
+                className="p-6 rounded-xl border cursor-pointer"
+                style={{
+                  backgroundColor: 'var(--card-bg)',
+                  borderColor: notification.read ? 'var(--card-border)' : 'var(--accent-primary)',
+                  borderWidth: notification.read ? '1px' : '2px',
+                  transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                  e.currentTarget.style.boxShadow = notification.read 
+                    ? '0 8px 16px rgba(124, 58, 237, 0.1)' 
+                    : '0 12px 24px rgba(124, 58, 237, 0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-4 flex-1">
+                    <div 
+                      className="w-10 h-10 rounded-xl flex items-center justify-center"
+                      style={{ backgroundColor: typeStyle.bg }}
+                    >
+                      <ChannelIcon className="w-5 h-5" style={{ color: typeStyle.color }} />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                          {notification.title}
+                        </h3>
+                        <span 
+                          className="px-2 py-1 rounded-lg text-xs font-bold uppercase"
+                          style={{
+                            backgroundColor: typeStyle.bg,
+                            color: typeStyle.text
+                          }}
+                        >
+                          {notification.type}
+                        </span>
+                        <span 
+                          className="px-2 py-1 rounded-lg text-xs font-bold uppercase"
+                          style={{
+                            backgroundColor: 'var(--surface-subtle)',
+                            color: priorityConfig[notification.priority].color
+                          }}
+                        >
+                          {notification.priority}
+                        </span>
+                      </div>
+                      <p className="text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
+                        {notification.message}
+                      </p>
+                      <div className="flex items-center gap-4 text-xs" style={{ color: 'var(--text-muted)' }}>
+                        <span className="flex items-center gap-1">
+                          <ChannelIcon className="w-3 h-3" />
+                          {channelConfig[notification.channel].label}
+                        </span>
+                        <span>{notification.timestamp}</span>
+                      </div>
+                    </div>
+                  </div>
+                  {!notification.read && (
+                    <div 
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: 'var(--accent-primary)' }}
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </ProfessionalDashboardLayout>
   );
 }

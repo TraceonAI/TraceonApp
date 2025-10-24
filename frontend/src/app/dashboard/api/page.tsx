@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import DashboardLayout from '@/components/DashboardLayout';
+import ProfessionalDashboardLayout from '@/components/ProfessionalDashboardLayout';
 import { 
   Key,
   Copy,
@@ -47,223 +46,231 @@ export default function APIPage() {
   ];
 
   const endpoints = [
-    {
-      method: 'POST',
-      path: '/api/v1/incidents',
-      description: 'Create a new incident',
-      color: 'bg-green-500'
-    },
-    {
-      method: 'GET',
-      path: '/api/v1/incidents',
-      description: 'List all incidents',
-      color: 'bg-blue-500'
-    },
-    {
-      method: 'GET',
-      path: '/api/v1/incidents/:id',
-      description: 'Get incident details',
-      color: 'bg-blue-500'
-    },
-    {
-      method: 'PATCH',
-      path: '/api/v1/incidents/:id',
-      description: 'Update an incident',
-      color: 'bg-yellow-500'
-    },
-    {
-      method: 'POST',
-      path: '/api/v1/integrations',
-      description: 'Add a new integration',
-      color: 'bg-green-500'
-    },
-    {
-      method: 'GET',
-      path: '/api/v1/analytics',
-      description: 'Retrieve analytics data',
-      color: 'bg-blue-500'
-    },
+    { method: 'POST', path: '/api/v1/incidents', description: 'Create a new incident' },
+    { method: 'GET', path: '/api/v1/incidents/:id', description: 'Get incident details' },
+    { method: 'POST', path: '/api/v1/metrics', description: 'Send metrics data' },
+    { method: 'GET', path: '/api/v1/agents', description: 'List all AI agents' },
   ];
 
-  const codeExample = `import traceon from '@traceon/sdk';
-
-const client = traceon.init({
-  apiKey: 'your_api_key_here',
-  environment: 'production'
-});
-
-// Create an incident
-const incident = await client.incidents.create({
-  title: 'Database latency spike',
-  severity: 'critical',
-  source: 'postgresql',
-  metadata: {
-    query_time: '1200ms',
-    affected_tables: ['users', 'orders']
-  }
-});
-
-// Get incident status
-const status = await client.incidents.get(incident.id);
-console.log(status);`;
-
-  const toggleKeyVisibility = (index: number) => {
-    setShowKey(prev => ({ ...prev, [index]: !prev[index] }));
-  };
-
-  const maskKey = (key: string) => {
-    return `${key.substring(0, 15)}${'•'.repeat(15)}`;
+  const toggleKeyVisibility = (idx: number) => {
+    setShowKey(prev => ({ ...prev, [idx]: !prev[idx] }));
   };
 
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">API Keys</h1>
-              <p className="text-gray-600 mt-1">Manage your API keys and integration credentials</p>
-            </div>
-            <button className="px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg hover:shadow-lg transition-shadow font-medium flex items-center gap-2">
-              <Plus className="w-4 h-4" />
-              Create API Key
-            </button>
+    <ProfessionalDashboardLayout>
+      <div className="p-6 space-y-6" style={{ backgroundColor: 'var(--surface-default)' }}>
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>API Keys</h1>
+            <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>Manage your API keys and access tokens</p>
           </div>
+          <button
+            className="px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+            style={{
+              backgroundColor: 'var(--button-primary-bg)',
+              color: 'var(--button-primary-text)',
+              boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)'
+            }}
+          >
+            <Plus className="w-5 h-5" />
+            Create New Key
+          </button>
+        </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-2xl p-6 border border-gray-200">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
-                  <Key className="w-6 h-6 text-white" />
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {[
+            { label: 'Total API Keys', value: '3', icon: Key },
+            { label: 'API Requests Today', value: '24.8K', icon: Activity },
+            { label: 'Success Rate', value: '99.8%', icon: CheckCircle },
+            { label: 'Active Endpoints', value: '12', icon: Code }
+          ].map((stat, idx) => {
+            const Icon = stat.icon;
+            return (
+              <div
+                key={idx}
+                className="p-6 rounded-xl border transition-all hover:scale-105 cursor-pointer"
+                style={{
+                  backgroundColor: 'var(--card-bg)',
+                  borderColor: 'var(--card-border)'
+                }}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div 
+                    className="w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{ backgroundColor: 'var(--surface-subtle)' }}
+                  >
+                    <Icon className="w-6 h-6" style={{ color: 'var(--accent-primary)' }} />
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-600">Active Keys</p>
-                  <p className="text-2xl font-bold text-gray-900">3</p>
-                </div>
+                <p className="text-3xl font-bold mb-1" style={{ color: 'var(--text-primary)' }}>
+                  {stat.value}
+                </p>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  {stat.label}
+                </p>
               </div>
-            </div>
-            <div className="bg-white rounded-2xl p-6 border border-gray-200">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                  <Activity className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">API Requests Today</p>
-                  <p className="text-2xl font-bold text-gray-900">1.6M</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-2xl p-6 border border-gray-200">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
-                  <CheckCircle className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Success Rate</p>
-                  <p className="text-2xl font-bold text-gray-900">99.8%</p>
-                </div>
-              </div>
-            </div>
-          </div>
+            );
+          })}
+        </div>
 
-          {/* API Keys List */}
-          <div className="bg-white rounded-2xl p-6 border border-gray-200">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Your API Keys</h2>
-            <div className="space-y-3">
-              {apiKeys.map((apiKey, idx) => (
-                <div key={idx} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Key className="w-4 h-4 text-purple-500" />
-                      <h3 className="font-semibold text-gray-900">{apiKey.name}</h3>
-                      <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                        {apiKey.status}
-                      </span>
+        {/* API Keys */}
+        <div 
+          className="rounded-2xl p-6 border"
+          style={{
+            backgroundColor: 'var(--card-bg)',
+            borderColor: 'var(--card-border)'
+          }}
+        >
+          <h2 className="text-xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>Your API Keys</h2>
+          <div className="space-y-4">
+            {apiKeys.map((apiKey, idx) => (
+              <div
+                key={idx}
+                className="p-5 rounded-xl border transition-all hover:scale-[1.01]"
+                style={{
+                  backgroundColor: 'var(--surface-subtle)',
+                  borderColor: 'var(--border-default)'
+                }}
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-start gap-4 flex-1">
+                    <div 
+                      className="w-10 h-10 rounded-lg flex items-center justify-center"
+                      style={{ backgroundColor: 'var(--accent-primary)' }}
+                    >
+                      <Key className="w-5 h-5 text-white" />
                     </div>
-                    <div className="flex items-center gap-4 mb-2">
-                      <code className="px-3 py-1 bg-gray-100 rounded font-mono text-sm text-gray-700">
-                        {showKey[idx] ? apiKey.key : maskKey(apiKey.key)}
-                      </code>
-                      <button 
-                        onClick={() => toggleKeyVisibility(idx)}
-                        className="p-1 hover:bg-gray-200 rounded transition-colors"
-                      >
-                        {showKey[idx] ? (
-                          <EyeOff className="w-4 h-4 text-gray-600" />
-                        ) : (
-                          <Eye className="w-4 h-4 text-gray-600" />
-                        )}
-                      </button>
-                      <button className="p-1 hover:bg-gray-200 rounded transition-colors">
-                        <Copy className="w-4 h-4 text-gray-600" />
-                      </button>
-                    </div>
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
-                      <span>Created: {apiKey.created}</span>
-                      <span>Last used: {apiKey.lastUsed}</span>
-                      <span>Requests: {apiKey.requests}</span>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+                        {apiKey.name}
+                      </h3>
+                      <div className="flex items-center gap-3 mb-3">
+                        <code 
+                          className="px-3 py-2 rounded-lg font-mono text-sm"
+                          style={{
+                            backgroundColor: 'var(--surface-default)',
+                            color: 'var(--text-primary)'
+                          }}
+                        >
+                          {showKey[idx] ? apiKey.key : '••••••••••••••••••••'}
+                        </code>
+                        <button
+                          onClick={() => toggleKeyVisibility(idx)}
+                          className="p-2 rounded-lg transition-all hover:scale-110"
+                          style={{ backgroundColor: 'var(--surface-default)' }}
+                        >
+                          {showKey[idx] ? (
+                            <EyeOff className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
+                          ) : (
+                            <Eye className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
+                          )}
+                        </button>
+                        <button
+                          className="p-2 rounded-lg transition-all hover:scale-110"
+                          style={{ backgroundColor: 'var(--surface-default)' }}
+                        >
+                          <Copy className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
+                        </button>
+                      </div>
+                      <div className="flex items-center gap-6 text-sm">
+                        <span style={{ color: 'var(--text-secondary)' }}>
+                          Created: {apiKey.created}
+                        </span>
+                        <span style={{ color: 'var(--text-secondary)' }}>
+                          Last used: {apiKey.lastUsed}
+                        </span>
+                        <span style={{ color: 'var(--text-secondary)' }}>
+                          {apiKey.requests} requests
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <button className="ml-4 p-2 hover:bg-red-50 rounded-lg transition-colors group">
-                    <Trash2 className="w-5 h-5 text-gray-400 group-hover:text-red-600" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* API Endpoints */}
-          <div className="bg-white rounded-2xl p-6 border border-gray-200">
-            <div className="flex items-center gap-2 mb-6">
-              <FileCode className="w-6 h-6 text-purple-500" />
-              <h2 className="text-xl font-bold text-gray-900">API Endpoints</h2>
-            </div>
-            <div className="space-y-2">
-              {endpoints.map((endpoint, idx) => (
-                <div key={idx} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <span className={`${endpoint.color} text-white px-3 py-1 rounded text-xs font-bold`}>
-                      {endpoint.method}
+                  <div className="flex items-center gap-2">
+                    <span 
+                      className="px-3 py-1 rounded-full text-xs font-medium"
+                      style={{
+                        backgroundColor: 'var(--status-positive-bg)',
+                        color: 'var(--status-positive-text)'
+                      }}
+                    >
+                      {apiKey.status}
                     </span>
-                    <code className="font-mono text-sm text-gray-900">{endpoint.path}</code>
+                    <button
+                      className="p-2 rounded-lg transition-all hover:scale-110"
+                      style={{ 
+                        backgroundColor: 'var(--status-critical-bg)',
+                        color: 'var(--status-critical-text)'
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
-                  <span className="text-sm text-gray-600">{endpoint.description}</span>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Code Example */}
-          <div className="bg-white rounded-2xl p-6 border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Code className="w-6 h-6 text-purple-500" />
-                <h2 className="text-xl font-bold text-gray-900">Quick Start Example</h2>
               </div>
-              <button className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
-                <Copy className="w-4 h-4" />
-                Copy
-              </button>
-            </div>
-            <div className="bg-gray-900 rounded-lg p-6 overflow-x-auto">
-              <pre className="text-sm text-gray-100 font-mono">
-                <code>{codeExample}</code>
-              </pre>
-            </div>
-          </div>
-
-          {/* API Documentation Link */}
-          <div className="bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl p-8 text-center">
-            <h3 className="text-2xl font-bold text-white mb-2">Need More Information?</h3>
-            <p className="text-purple-100 mb-6">Check out our comprehensive API documentation</p>
-            <button className="px-6 py-3 bg-white text-purple-600 rounded-lg font-semibold hover:shadow-lg transition-shadow">
-              View Full Documentation
-            </button>
+            ))}
           </div>
         </div>
-      </DashboardLayout>
-    </ProtectedRoute>
+
+        {/* Available Endpoints */}
+        <div 
+          className="rounded-2xl p-6 border"
+          style={{
+            backgroundColor: 'var(--card-bg)',
+            borderColor: 'var(--card-border)'
+          }}
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Available Endpoints</h2>
+            <button
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:scale-105 flex items-center gap-2"
+              style={{
+                backgroundColor: 'var(--surface-subtle)',
+                color: 'var(--text-secondary)',
+                border: `1px solid var(--border-default)`
+              }}
+            >
+              <FileCode className="w-4 h-4" />
+              View Documentation
+            </button>
+          </div>
+          <div className="space-y-3">
+            {endpoints.map((endpoint, idx) => (
+              <div
+                key={idx}
+                className="flex items-center justify-between p-4 rounded-lg"
+                style={{ backgroundColor: 'var(--surface-subtle)' }}
+              >
+                <div className="flex items-center gap-4">
+                  <span 
+                    className="px-3 py-1 rounded-lg text-xs font-bold"
+                    style={{
+                      backgroundColor: endpoint.method === 'POST' 
+                        ? 'var(--status-info-bg)' 
+                        : 'var(--status-positive-bg)',
+                      color: endpoint.method === 'POST' 
+                        ? 'var(--status-info-text)' 
+                        : 'var(--status-positive-text)'
+                    }}
+                  >
+                    {endpoint.method}
+                  </span>
+                  <code 
+                    className="font-mono text-sm font-medium"
+                    style={{ color: 'var(--text-primary)' }}
+                  >
+                    {endpoint.path}
+                  </code>
+                </div>
+                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  {endpoint.description}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </ProfessionalDashboardLayout>
   );
 }

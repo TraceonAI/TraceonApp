@@ -2,6 +2,23 @@
 
 A modern, responsive web application for intelligent log analysis and root cause analysis built with Next.js, TypeScript, and Tailwind CSS.
 
+## 🚀 Quick Links
+
+- **[API Integration Guide](./BACKEND_INTEGRATION_GUIDE.md)** - Complete backend integration specs
+- **[API Quick Reference](./API_INTEGRATION_REFERENCE.md)** - Quick start for developers
+- **[API Architecture](./API_ARCHITECTURE.md)** - Visual diagrams and data flows
+- **[API Summary](./API_CENTRALIZATION_SUMMARY.md)** - Overview of centralized APIs
+
+### Centralized API Services
+
+All backend API calls are now centralized in `src/services/api/`:
+- ✅ **60+ endpoints cataloged** with full specifications
+- ✅ **17 endpoints** using mock data (ready for integration)
+- ✅ **Full TypeScript types** for all APIs
+- ✅ **Comprehensive documentation** for backend developers
+
+Import and use: `import { incidentsService, logsService, metricsService } from '@/services/api';`
+
 ## Features
 
 - **Interactive Chat Interface**: Communicate with Traceon AI to initiate analysis and get insights
