@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import { 
   Brain, 
@@ -381,6 +382,234 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Product Screenshots Showcase */}
+      <section className="relative py-32 overflow-hidden" style={{ backgroundColor: '#000000' }}>
+        <div className="absolute inset-0 z-0">
+          <Particles
+            particleColors={['#FFFFFF']}
+            particleCount={300}
+            particleSpread={15}
+            speed={0.04}
+            particleBaseSize={180}
+            moveParticlesOnHover={false}
+            alphaParticles={true}
+            disableRotation={false}
+            particleHoverFactor={0.2}
+          />
+        </div>
+
+        <FadeContent blur={true} duration={1000} delay={100} className="w-full px-6 lg:px-12 xl:px-16 relative z-10">
+          <div className="text-center mb-20">
+            <BlurText
+              text="Experience the Power of AI-Driven Operations"
+              delay={80}
+              animateBy="words"
+              direction="top"
+              className="text-4xl lg:text-5xl font-bold mb-6"
+              style={{ color: 'var(--landing-text-primary)', margin: 'auto', justifyContent: 'center' }}
+            />
+            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'var(--landing-text-secondary)' }}>
+              Real-time insights, intelligent automation, and comprehensive observability — all in one platform
+            </p>
+          </div>
+
+          {/* Screenshots Grid */}
+          <div className="grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+            {/* Agent Console */}
+            <FadeContent blur={true} duration={800} delay={200}>
+              <div 
+                className="group rounded-2xl overflow-hidden border glass-effect"
+                style={{ 
+                  borderColor: 'var(--landing-border-primary)',
+                  transition: 'all 500ms cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-12px) scale(1.02)';
+                  e.currentTarget.style.borderColor = 'var(--neon-purple)';
+                  e.currentTarget.style.boxShadow = '0 25px 50px rgba(124, 58, 237, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.borderColor = 'var(--landing-border-primary)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div className="p-6 border-b" style={{ borderColor: 'var(--landing-border-primary)', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <Brain className="w-6 h-6" style={{ color: 'var(--neon-purple)' }} />
+                    <h3 className="text-xl font-bold" style={{ color: 'var(--landing-text-primary)' }}>
+                      AI Agent Console
+                    </h3>
+                  </div>
+                  <p className="text-sm" style={{ color: 'var(--landing-text-secondary)' }}>
+                    Conversational RCA with automated remediation
+                  </p>
+                </div>
+                <div className="relative aspect-video bg-gradient-to-br from-purple-900/20 to-blue-900/20">
+                  <Image
+                    src="/images/agent_console.png"
+                    alt="AI Agent Console - Conversational root cause analysis"
+                    fill
+                    className="object-cover object-top"
+                    style={{ transition: 'all 500ms cubic-bezier(0.4, 0, 0.2, 1)' }}
+                  />
+                </div>
+              </div>
+            </FadeContent>
+
+            {/* Service Map */}
+            <FadeContent blur={true} duration={800} delay={300}>
+              <div 
+                className="group rounded-2xl overflow-hidden border glass-effect"
+                style={{ 
+                  borderColor: 'var(--landing-border-primary)',
+                  transition: 'all 500ms cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-12px) scale(1.02)';
+                  e.currentTarget.style.borderColor = 'var(--neon-blue)';
+                  e.currentTarget.style.boxShadow = '0 25px 50px rgba(59, 130, 246, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.borderColor = 'var(--landing-border-primary)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div className="p-6 border-b" style={{ borderColor: 'var(--landing-border-primary)', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <Network className="w-6 h-6" style={{ color: 'var(--neon-blue)' }} />
+                    <h3 className="text-xl font-bold" style={{ color: 'var(--landing-text-primary)' }}>
+                      Service Topology
+                    </h3>
+                  </div>
+                  <p className="text-sm" style={{ color: 'var(--landing-text-secondary)' }}>
+                    Real-time dependency mapping and health monitoring
+                  </p>
+                </div>
+                <div className="relative aspect-video bg-gradient-to-br from-blue-900/20 to-cyan-900/20">
+                  <Image
+                    src="/images/service_map.png"
+                    alt="Service Topology - Real-time dependency mapping"
+                    fill
+                    className="object-cover object-top"
+                    style={{ transition: 'all 500ms cubic-bezier(0.4, 0, 0.2, 1)' }}
+                  />
+                </div>
+              </div>
+            </FadeContent>
+
+            {/* Metrics Dashboard */}
+            <FadeContent blur={true} duration={800} delay={400}>
+              <div 
+                className="group rounded-2xl overflow-hidden border glass-effect"
+                style={{ 
+                  borderColor: 'var(--landing-border-primary)',
+                  transition: 'all 500ms cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-12px) scale(1.02)';
+                  e.currentTarget.style.borderColor = 'var(--neon-green)';
+                  e.currentTarget.style.boxShadow = '0 25px 50px rgba(34, 197, 94, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.borderColor = 'var(--landing-border-primary)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div className="p-6 border-b" style={{ borderColor: 'var(--landing-border-primary)', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <BarChart3 className="w-6 h-6" style={{ color: 'var(--neon-green)' }} />
+                    <h3 className="text-xl font-bold" style={{ color: 'var(--landing-text-primary)' }}>
+                      Metrics & Analytics
+                    </h3>
+                  </div>
+                  <p className="text-sm" style={{ color: 'var(--landing-text-secondary)' }}>
+                    Unified observability across all services
+                  </p>
+                </div>
+                <div className="relative aspect-video bg-gradient-to-br from-green-900/20 to-emerald-900/20">
+                  <Image
+                    src="/images/metrics.png"
+                    alt="Metrics & Analytics - Unified observability"
+                    fill
+                    className="object-cover object-top"
+                    style={{ transition: 'all 500ms cubic-bezier(0.4, 0, 0.2, 1)' }}
+                  />
+                </div>
+              </div>
+            </FadeContent>
+
+            {/* Database Monitoring */}
+            <FadeContent blur={true} duration={800} delay={500}>
+              <div 
+                className="group rounded-2xl overflow-hidden border glass-effect"
+                style={{ 
+                  borderColor: 'var(--landing-border-primary)',
+                  transition: 'all 500ms cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-12px) scale(1.02)';
+                  e.currentTarget.style.borderColor = 'var(--neon-orange)';
+                  e.currentTarget.style.boxShadow = '0 25px 50px rgba(249, 115, 22, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.borderColor = 'var(--landing-border-primary)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div className="p-6 border-b" style={{ borderColor: 'var(--landing-border-primary)', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <Database className="w-6 h-6" style={{ color: 'var(--neon-orange)' }} />
+                    <h3 className="text-xl font-bold" style={{ color: 'var(--landing-text-primary)' }}>
+                      Query Studio
+                    </h3>
+                  </div>
+                  <p className="text-sm" style={{ color: 'var(--landing-text-secondary)' }}>
+                    SQL-powered insights across all data sources
+                  </p>
+                </div>
+                <div className="relative aspect-video bg-gradient-to-br from-orange-900/20 to-red-900/20">
+                  <Image
+                    src="/images/database.png"
+                    alt="Query Studio - SQL-powered insights"
+                    fill
+                    className="object-cover object-top"
+                    style={{ transition: 'all 500ms cubic-bezier(0.4, 0, 0.2, 1)' }}
+                  />
+                </div>
+              </div>
+            </FadeContent>
+          </div>
+
+          {/* CTA Button */}
+          <div className="text-center mt-16">
+            <Link 
+              href="/signup" 
+              className="inline-flex items-center gap-3 px-8 py-4 rounded-xl text-lg font-semibold group"
+              style={{
+                backgroundColor: 'var(--accent-primary)',
+                color: 'white',
+                transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)';
+                e.currentTarget.style.boxShadow = '0 20px 40px rgba(124, 58, 237, 0.5)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <span>Try it Free for 14 Days</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </FadeContent>
       </section>
 
       {/* Feature Showcase - Graphite Style */}

@@ -39,6 +39,7 @@ interface Action {
 }
 
 export default function AgentConsolePage() {
+  const [mounted, setMounted] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -50,6 +51,10 @@ export default function AgentConsolePage() {
   const [input, setInput] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -242,7 +247,7 @@ export default function AgentConsolePage() {
         <div className="flex-1 overflow-hidden flex">
           {/* Messages */}
           <div className="flex-1 overflow-y-auto px-6 py-6">
-            <div className="max-w-4xl mx-auto space-y-6">
+            <div className="space-y-6">
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -270,7 +275,7 @@ export default function AgentConsolePage() {
                   {/* Message Content */}
                   <div className="flex-1 space-y-2">
                     <div
-                      className="rounded-2xl px-6 py-4 max-w-3xl"
+                      className="rounded-2xl px-6 py-4"
                       style={{
                         backgroundColor: message.role === 'user'
                           ? 'var(--accent-primary)'
@@ -390,7 +395,7 @@ export default function AgentConsolePage() {
                     <div className="flex items-center gap-2 px-2">
                       <Clock className="w-3 h-3" style={{ color: 'var(--text-muted)' }} />
                       <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                        {message.timestamp.toLocaleTimeString()}
+                        {mounted ? message.timestamp.toLocaleTimeString() : ''}
                       </span>
                     </div>
                   </div>
@@ -543,7 +548,7 @@ export default function AgentConsolePage() {
             backgroundColor: 'var(--surface-raised)'
           }}
         >
-          <div className="max-w-4xl mx-auto">
+          <div>
             <div 
               className="flex items-end gap-3 p-2 rounded-2xl border"
               style={{

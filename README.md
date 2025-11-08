@@ -7,12 +7,35 @@ Traceon AI is an intelligent log analysis and root cause analysis platform desig
 
 ## Features
 
+### Core Capabilities
 - **Intelligent Log Analysis**: AI-powered analysis of log files and system events
 - **Root Cause Analysis**: Automated identification of issue sources and contributing factors
 - **Interactive Chat Interface**: Natural language interaction with the AI assistant
 - **Real-time Monitoring**: Live updates and analysis of system events
 - **Multi-platform Integration**: Support for Slack, Sentry, Splunk, Teams, OpenSearch, GitHub, and Datadog
 - **Comprehensive Reporting**: Detailed analysis reports with actionable recommendations
+
+### Advanced Search & Filtering
+- **Correlation ID Tracking**: Search logs across services using correlation IDs
+- **Application-Scoped Search**: Filter AI scans to specific application codebases
+- **Database-Targeted Search**: Focus searches on selected databases to optimize AI analysis
+- **Advanced Filter Panel**: Combine multiple filters for precise incident investigation
+
+### Observability Dashboards
+- **HTTP Status Code Dashboard**: Monitor API health with status code distribution by application
+- **Application Health & Uptime**: Real-time ping checks and uptime monitoring for all services
+- **Custom Metrics**: User-configurable dashboards with time-range selection
+- **Service Health Overview**: At-a-glance health scores, response times, and throughput metrics
+
+### AI-Powered Dashboard Builder
+- **Natural Language Interface**: Describe dashboards in plain English, AI generates the query
+- **Multi-Platform Support**: Generate queries for Splunk, Prometheus, Elasticsearch, Grafana, Datadog, and SQL
+- **Dual Execution Mode**: 
+  - Execute queries directly in TraceonAI
+  - Copy queries to use in external platforms
+- **Query Library**: Save and manage generated dashboard configurations
+
+> 📖 **Detailed Feature Documentation**: See [FEATURES_IMPLEMENTATION.md](./FEATURES_IMPLEMENTATION.md) for comprehensive feature guides, use cases, and technical specifications.
 
 ## Architecture
 
