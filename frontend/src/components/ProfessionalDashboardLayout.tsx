@@ -21,13 +21,11 @@ import {
   FileBarChart,
   Settings,
   Search,
-  Command,
   ChevronLeft,
   ChevronRight,
   Sun,
   Moon,
   User,
-  HelpCircle,
   Globe,
   Zap,
   CheckCircle,
@@ -429,8 +427,8 @@ export default function ProfessionalDashboardLayout({ children }: DashboardLayou
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{ color: 'var(--text-muted)' }} />
               <input
                 type="text"
-                placeholder="Search or press ⌘/ to open command palette..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2"
+                placeholder="Search incidents, metrics, logs..."
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2"
                 style={{
                   backgroundColor: 'var(--input-bg)',
                   borderColor: 'var(--input-border)',
@@ -439,16 +437,6 @@ export default function ProfessionalDashboardLayout({ children }: DashboardLayou
                 onFocus={(e) => e.currentTarget.style.borderColor = 'var(--input-border-focus)'}
                 onBlur={(e) => e.currentTarget.style.borderColor = 'var(--input-border)'}
               />
-              <kbd 
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 px-2 py-1 text-xs font-mono rounded"
-                style={{ 
-                  backgroundColor: 'var(--surface-subtle)',
-                  color: 'var(--text-muted)',
-                  border: `1px solid var(--border-default)`
-                }}
-              >
-                ⌘/
-              </kbd>
             </div>
           </div>
 
@@ -503,29 +491,6 @@ export default function ProfessionalDashboardLayout({ children }: DashboardLayou
               {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
             </button>
 
-            {/* Command Palette */}
-            <button
-              className="p-2.5 rounded-xl transition-all duration-200 hover:scale-110 active:scale-95"
-              style={{
-                backgroundColor: 'var(--surface-subtle)',
-                color: 'var(--text-secondary)',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--accent-primary)';
-                e.currentTarget.style.color = 'var(--text-inverse)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--surface-subtle)';
-                e.currentTarget.style.color = 'var(--text-secondary)';
-                e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
-              }}
-              title="Command palette (⇧⌘P)"
-            >
-              <Command className="w-5 h-5" />
-            </button>
-
             {/* Notifications */}
             <button
               className="p-2.5 rounded-xl transition-all duration-200 hover:scale-110 active:scale-95 relative"
@@ -554,28 +519,6 @@ export default function ProfessionalDashboardLayout({ children }: DashboardLayou
                   boxShadow: '0 0 8px rgba(239, 68, 68, 0.6)'
                 }}
               />
-            </button>
-
-            {/* Help */}
-            <button
-              className="p-2.5 rounded-xl transition-all duration-200 hover:scale-110 active:scale-95"
-              style={{
-                backgroundColor: 'var(--surface-subtle)',
-                color: 'var(--text-secondary)',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--accent-primary)';
-                e.currentTarget.style.color = 'var(--text-inverse)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--surface-subtle)';
-                e.currentTarget.style.color = 'var(--text-secondary)';
-                e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
-              }}
-            >
-              <HelpCircle className="w-5 h-5" />
             </button>
 
             {/* Profile Dropdown */}

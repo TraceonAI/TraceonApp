@@ -269,3 +269,66 @@
   background: var(--accent-primary);
   color: var(--text-inverse);
 }
+
+/* Enhanced Padding for Rounded Components - Balanced Design */
+/* Subtle padding increases for better text-to-border spacing */
+
+/* Card components - modest increase */
+.p-4.rounded-lg,
+.p-4.rounded-xl {
+  padding: 1.125rem !important;
+}
+
+.p-6.rounded-xl,
+.p-6.rounded-2xl {
+  padding: 1.75rem !important;
+}
+
+.p-3.rounded-lg {
+  padding: 0.875rem !important;
+}
+
+.p-2.rounded-lg,
+.p-2.rounded-xl {
+  padding: 0.625rem !important;
+}
+
+/* Icon containers - slight increase */
+.w-12.h-12.rounded-xl,
+.w-16.h-16.rounded-xl {
+  padding: 0.625rem !important;
+}
+
+/* Button padding - comfortable but not excessive */
+.px-6.py-3.rounded-xl,
+.px-6.py-3.rounded-lg {
+  padding: 0.875rem 1.75rem !important;
+}
+
+.px-4.py-2.rounded-lg {
+  padding: 0.625rem 1.25rem !important;
+}
+
+.px-3.py-1\.5.rounded-lg {
+  padding: 0.5rem 0.875rem !important;
+}
+
+/* Status badges - minimal increase */
+.px-2.py-1.rounded-full {
+  padding: 0.3125rem 0.625rem !important;
+}
+
+/* Badge/tag components - make puffier */
+.px-2.py-1.rounded-lg.text-xs {
+  padding: 0.5rem 0.875rem !important;
+}
+
+span.px-2.py-1.rounded-lg.text-xs {
+  padding: 0.5rem 0.875rem !important;
+}
+
+/* Form inputs - comfortable typing space */
+.px-4.py-3.rounded-lg {
+  padding: 0.875rem 1.125rem !important;
+}
+

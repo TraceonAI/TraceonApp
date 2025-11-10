@@ -187,14 +187,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   <Menu className="w-6 h-6 text-gray-700" />
                 </button>
                 
-                <div className="hidden md:flex items-center bg-gray-100 rounded-xl px-4 py-2 w-96">
-                  <Search className="w-5 h-5 text-gray-400 mr-2" />
+                <div className="hidden md:flex items-center bg-gray-100 rounded-xl px-4 py-2.5 w-96">
+                  <Search className="w-5 h-5 text-gray-400 mr-3" />
                   <input
                     type="text"
                     placeholder="Search incidents, metrics, logs..."
                     className="bg-transparent outline-none text-sm text-gray-700 placeholder-gray-400 w-full"
                   />
-                  <kbd className="ml-2 px-2 py-1 bg-white rounded text-xs text-gray-500 font-mono shadow-sm">⌘K</kbd>
                 </div>
               </div>
 
